@@ -1,0 +1,257 @@
+{% extends 'dashboard/members_layout.html' %}
+{% block page_body %}
+<script type="text/javascript">
+$(function()
+{
+   $(".pay_type").on("click", function() {
+      var val = $(this).val();
+      if (val === "YES")
+      {
+         $("#yes_div").show();
+         $("#no_div").hide();
+         $("#pay_type_div").hide();
+         $("#pay-pal-div").hide();
+         $("#fac-div").hide();
+         $("#post_back_url_div").show();
+      }
+      else
+      {
+         $("#yes_div").hide();
+         $("#pay_type_div").hide();
+         $("#pay-pal-div").hide();
+         $("#fac-div").hide();
+         $("#no_div").show();
+      }
+   });
+   
+   $(".btn-postback").on("click", function() {
+      if($("#post_back_url").val() === "")
+      {
+         return;
+      }
+      $("#post_back_url_div").hide();
+      $("#user_id_div").show();
+   });
+
+   $(".btn-conversion").on("click", function() {
+      if($("#user_id").val() === "")
+      {
+         return;
+      }
+      $("#next_div").show();
+      $("#conversion_div").show();
+   });
+
+   $(".btn-next").on("click", function() {
+      $("#user_id_div").hide();
+      $("#next_div").hide();
+      $("#conversion_div").hide();
+      $("#pay_type_div").show();
+   });
+
+   $(".paid-type").on("click", function() {
+      var val = $(this).val();
+      if (val === "PAYPAL")
+      {
+         $("#fac-div").hide();
+         $("#pay-pal-div").show();
+      } 
+      else
+      {
+         $("#pay-pal-div").hide();
+         $("#fac-div").show();
+      }     
+   });
+
+   $("#reward").on('keyup', function() {
+      var reward = $("#reward").val();
+      if (reward !== "")
+      {
+         var calc_reward = (100 - parseInt(reward)); 
+         var you_text = "You will receive "+ calc_reward +"% of the reward per conversion.";
+         var other_text = "Your user will receive "+ reward +"% of the reward per conversion.";
+         $(".you_text").html(you_text);
+         $(".other_text").html(other_text);
+         $("#reward_percentage_div").show();
+      }
+   });
+
+   $(".btn-next-reward").on("click", function() {
+      $("#pay_type_div").show();
+   })
+});
+</script>
+<div class="content-wrapper" style="margin:0px;">
+  <SECTION class="content-header">
+    <h1>
+      Offerwall Creation
+    </h1>
+  </SECTION>
+  <div class="content">
+    <section class="block-wrapper">
+       <form  method="post">
+          {% csrf_token%}
+         
+             {%if error %}
+             <center>
+                <div class="alert-danger" style="    padding: 10px;">
+                   {{error}}
+                </div>
+             </center>
+             {%endif%}  
+            {% if message %}        
+              <center>
+                 <div class="alert-success" style="    padding: 10px;">
+                    {{message}}
+                 </div>
+              </center>
+              <div style="margin:0px auto;width:50%;padding:10px;">
+                <div class="form-group " style="margin-bottom: 0px;">
+                   <label for="Input_Site_Url">Copy this code to your website</label>
+                   <textarea id="iframe_url" name="iframe_url" style="width:100%;" 
+                      class="form-control" autocomplete="off"                   
+                      tabindex="1">https://jungleofferwall.com/offerwall/test/1234</textarea>
+                </div>            
+             </div>
+          {%else%}
+          <p>
+              <center>
+               Do you have a webmaster/programmer on your team that knows how to make a postback URL? This requires programming experience.
+            </center>
+            <center>
+               <div style="padding-top:10px;">
+                  <input type="radio" value="YES" name="paid-type" class="pay_type"> YES / 
+                  <input name="paid-type" type="radio" value="NO" class="pay_type"> NO
+               </div>
+            </center>
+            </p>
+          <div id="yes_div" style="display:none;">
+             <div style="margin:0px auto;width:75%;padding:10px;display: none;" id="post_back_url_div">
+                <div class="form-group col-md-5" style="margin-bottom: 0px;">
+                   <label for="Input_Site_Url">Enter your Postback URL</label>
+                   <input type="text" id="post_back_url" name="post_back_url"
+                      class="field js-add-site form-control" autocomplete="off" tabindex="1" value=""/>
+                </div>
+                <div style="clear:both;"></div>
+                <div class="col-md-5">
+                   <button type="button" class=" color-btn btn btn-success btn-postback">Submit</button>
+                </div>
+             </div>
+             <div style="clear:both;"></div>
+             <div style="margin:0px auto;width:75%;padding:10px;display: none;" id="user_id_div">
+                   <div class="form-group col-md-5" style="margin-bottom: 0px;">
+                      <label for="Input_Site_Url">In order to test the postback URL, enter a User ID of one of your users so you can verify the postback URL works.</label>
+                      <input type="text" id="user_id" name="user_id"
+                         class="field js-add-site form-control" autocomplete="off" tabindex="1" value=""/>
+                   </div>
+                   <div style="clear:both;"></div>
+                   <div class="col-md-5">
+                      <button type="button" class="color-btn btn btn-success btn-conversion">Submit</button>
+                   </div>
+             </div>
+
+             <div style="clear:both;"></div>
+             <div style="margin:0px auto;width:75%;padding:10px;display: none;" id="conversion_div">
+                <div class="form-group label label-success" style="margin-bottom: 0px;">
+                   Please check on your end to verify you see the conversion made.
+                </div>
+             </div>
+
+             <div style="clear:both;"></div>
+             <div style="margin:0px auto;width:75%;padding:10px;display: none;" id="next_div">
+                <div class="form-group" style="margin-bottom: 0px;">
+                      <button type="button" class="color-btn btn btn-success btn-next">Next</button>
+                </div>
+             </div>
+          </div>
+
+          <div id="no_div" style="display:none;">
+             <div style="margin:0px auto;width:75%;padding:10px;" id="reward_div">
+                <div class="form-group col-md-5" style="margin-bottom: 0px;">
+                   <label for="Input_Site_Url">
+                      Enter the percentage of the reward you want to share with your users. Example, 50%, 60%, 70%...
+                   </label>
+                   <input type="number" id="reward" name="reward"
+                      class="field js-add-site form-control" autocomplete="off" tabindex="1" value="" />
+                </div>
+                <div style="clear:both;"></div>
+                <div style="margin:0px auto;display: none;" id="reward_percentage_div">
+                   <div class="form-group label label-success you_text" style="margin-bottom: 10px;">
+                      
+                   </div>
+                   <br>
+                   <div class="form-group label label-success other_text" style="margin-bottom: 0px;">
+                      
+                   </div>
+                   <div style="clear:both;"></div>
+                   <div class="col-md-5" style="margin-top:20px;">
+                      <button type="button" class="color-btn btn btn-success btn-next-reward">Next</button>
+                   </div>
+                </div>         
+             </div>
+             <div style="clear:both;"></div>
+          </div>
+
+          <div style="clear:both;"></div>
+          <div style="margin:0px auto;width:75%;padding:10px;display: none;" id="pay_type_div">
+             <div class="form-group" style="margin-bottom: 0px;">
+                <label for="Input_Site_Url">
+                   How do you want to be paid?
+                </label>
+                <div style="padding-top:10px;">
+                   <input type="radio" value="PAYPAL" name="pay_type_radio" class="paid-type"> Paypal (monthly) / 
+                   <input type="radio" value="Faucethub" class="paid-type" name="pay_type_radio"> Faucethub bitcoin wallet (daily)
+                </div>
+             </div>      
+          </div>
+          
+          <div style="clear:both;"></div>
+          <div style="margin:0px auto;width:75%;padding:10px;display: none;" id="pay-pal-div">
+             
+                <div class="row" id="tab-paypal">
+                   <input type="hidden" name="type" value="paypal"/>
+
+                   <div class="form-group col-md-4" style="margin-bottom: 0px;">
+                      <label for="pp_paypal_email">PayPal Email:</label>
+                      <input type="email" name="paypalemail" class="field js-add-site form-control" id="pp_paypal_email" autocomplete="off" tabindex="5" value="" aria-required="true">
+                   </div>
+                   
+                </div>
+                <div class="js_additional_fields show">
+                   <!-- <div class="form-group col-md-4" style="margin-bottom: 0px;">
+                      <label for="confirm_pass" class="required" aria-required="true" >Your password (Viral-Lift):</label><br>
+                      <input type="password" name="password" class="field js-add-site form-control" id="confirm_pass" autocomplete="off" tabindex="5" value="" aria-required="true" required>
+                   </div> -->
+                   <div style="clear:both;"></div>
+                   <div class="form-group">
+                      <button type="submit" class="btn btn-header" >Save</button>
+                   </div>
+                </div>
+             
+          </div>
+          <div style="clear:both;"></div>
+          <div style="margin:0px auto;width:75%;padding:10px;display: none;" id="fac-div">
+                <div class="row" id="tab-paypal">
+                   <input type="hidden" name="type" value="paypal"/>
+
+                   <div class="form-group col-md-4" style="margin-bottom: 0px;">
+                      <label for="fc_paypal_email">Enter your Faucethub wallet:</label>
+                      <input type="text" name="faucethub_email" class="field js-add-site form-control"
+                       id="fc_paypal_email" autocomplete="off" tabindex="5" value="" aria-required="true">
+                   </div>
+                   
+                </div>
+                <div class="js_additional_fields show">
+                   <div style="clear:both;"></div>
+                   <div class="form-group">
+                      <button type="submit" class="btn btn-header">Save</button>
+                   </div>
+                </div>
+          </div>
+          {%endif%}     
+            
+       </form>
+    </section>
+  </div>
+</div>
+{% endblock %}

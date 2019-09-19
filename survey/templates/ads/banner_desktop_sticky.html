@@ -1,0 +1,21 @@
+
+<div class="sc-banner m-1 sc-banner-sticky-desktop" style="margin: 0 auto!important;">
+    <div>
+        <button type="button" class="close" aria-label="close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div id='{{ banner_sticky_desktop.id }}' class="sc-banner-sticky-desktop-body">
+            <script>
+                googletag.cmd.push(function() { googletag.display('{{ banner_sticky_desktop.id }}'); });
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('.sc-banner-sticky-desktop .close').addEventListener('click', () => {
+            document.querySelector('.sc-banner-sticky-desktop').style.display = 'none'
+        })
+    })
+</script>

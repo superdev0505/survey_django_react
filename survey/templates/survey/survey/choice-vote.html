@@ -1,0 +1,83 @@
+{% load trans %}
+
+<div class="form-group d-flex flex-wrap mb-0 sc-survey-choice-vote">
+
+    <div class=" flex-1 col-lg-5 sc-survey-choice-vote-left">
+        <label id="choice-label-1" for="choice1" data-stat="{{ choice1_count }}">
+            <div class="card">
+                <div class="card-body border-primary">
+                    <div class="sc-survey-choice-vote-stat" style="display: none">
+                        <div class="percent"></div>
+                        <div class="votes"></div>
+                    </div>
+                    <div>
+                        {{ choice1.text }}
+                    </div>
+                </div>
+            </div>
+            <input type="radio" id="choice1" value="{{ choice1.id }}" name="choice">
+        </label>
+    </div>
+
+    <div class="sc-survey-choice-vote-or">
+        {% trans 'or' %}
+    </div>
+
+    <div class=" flex-1 col-lg-5 sc-survey-choice-vote-right">
+        <label id="choice-label-2" for="choice2" data-stat="{{ choice2_count }}">
+            <div class="card">
+                <div class="card-body border-primary">
+                    <div class="sc-survey-choice-vote-stat" style="display: none">
+                        <div class="percent"></div>
+                        <div class="votes"></div>
+                    </div>
+                    <div>
+                        {{ choice2.text }}
+                    </div>
+                </div>
+            </div>
+            <input type="radio" id="choice2" value="{{ choice2.id }}" name="choice">
+        </label>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const el1 = document.getElementById('choice-label-1');
+        const el2 = document.getElementById('choice-label-2');
+
+        const stat1 = Number(el1.dataset.stat) || 0;
+        const stat2 = Number(el2.dataset.stat) || 0;
+        const allStat = stat1 + stat2 + 1;
+
+        const addStats = (el, stat, active) => {
+            stat = active ? (stat + 1) : stat;
+            el.querySelector('.sc-survey-choice-vote-stat').style.display = 'block';
+            el.querySelector('.sc-survey-choice-vote-stat .percent').innerText = Math.round(100 * stat / allStat) + '%';
+            el.querySelector('.sc-survey-choice-vote-stat .votes').innerText = `${stat} ${active ? '{% trans "agree" %}' : '{% trans "disagree" %}'}`;
+        };
+
+        const click = (elActivate, elDisable) => {
+            elActivate.classList.add('active');
+            elDisable.classList.remove('active');
+            addStats(el1, stat1, el1 === elActivate);
+            addStats(el2, stat2, el2 === elActivate);
+        };
+
+        const cb1 = () => {
+            el1.removeEventListener('click', cb1);
+            el2.removeEventListener('click', cb2);
+            click(el1, el2)
+        };
+
+        const cb2 = () => {
+            el1.removeEventListener('click', cb1);
+            el2.removeEventListener('click', cb2);
+            click(el2, el1)
+        };
+
+        el1.addEventListener('click', cb1);
+        el2.addEventListener('click', cb2);
+    })
+</script>

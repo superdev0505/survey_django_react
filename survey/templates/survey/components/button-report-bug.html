@@ -1,0 +1,86 @@
+{% load trans %}
+
+{% if request.user.is_authenticated %}
+    <button class="btn btn-outline-danger" data-toggle="modal" data-target="#bugModal">{% trans 'Report a Bug' %}</button>
+{%endif%}
+
+<!-- Modal -->
+<div class="modal fade" id="bugModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header pl-4">
+                <h6 class="modal-title">
+                    Report a Bug
+                </h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+            <div class="modal-body p-4">
+                <p>Please describe the bug you are facing and you can provide a screenshot by
+                    using this free site <a href="https://paste.pics" target="_blank" rel="nofollow noreferer">https://paste.pics </a> and include the url of
+                    your screenshot.</p>
+
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea class="form-control" rows="5" name="message" id="bug-report-message"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="url">Enter Screenshot Url:</label>
+                    <input type="text" class="form-control" name="url" id="bug-report-url">
+                </div>
+
+                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+                <div class="bug-report-submit-container form-group d-flex justify-content-between align-items-center">
+
+                    <div class="g-recaptcha" data-sitekey="{{ recaptcha_key }}"></div>
+
+                    <button type="Submit" id="bug-report-submit" class="btn btn-success">Submit</button>
+
+                </div>
+                <div id="bug-report-send-message"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.0.6/fingerprint2.min.js"></script>
+    <script type="application/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            let modal = $('#bugModal');
+            let modalStatus = $('#bug-report-send-message');
+
+            $('#bug-report-submit').on('click', () => {
+                let captcha = $('[name=g-recaptcha-response]').val();
+                let message = $('#bug-report-message').val();
+                let url = $('#bug-report-url').val();
+
+                Fingerprint2.get(function (fingerprint) {
+                    fingerprint = fingerprint.filter(i => i.key !== 'canvas' && i.key !== 'webgl');
+                    SV.fetch('/bug-report/', {captcha, message, url, fingerprint})
+                        .then(r => {
+                            modalStatus
+                                .addClass('valid-feedback')
+                                .text('Thank you for your report! We will deal with it as soon as possible.')
+                                .show();
+                            setTimeout(() => window.location.href = '/', 3000)
+                        })
+                        .catch(r => {
+                            modalStatus
+                                .addClass('invalid-feedback')
+                                .text(r.error)
+                                .show()
+                        })
+                })
+
+            })
+        })
+    </script>
+    
+</div>

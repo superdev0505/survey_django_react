@@ -1,0 +1,73 @@
+<div class="modal fade" id="modalRules" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Important information!</h5>
+            </div>
+            <div class="modal-body">
+
+                <p>Please confirm you understand the following important rules to ensure your quiz is counted as
+                    valid:</p>
+
+
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="modalRule1">
+                        <label class="custom-control-label" for="modalRule1">6 of the 10 questions will be asked two
+                            times in each quiz. If you are giving contradicting answers
+                            your quiz will be invalid. So don't guess or give random answers. Pay attention to how you
+                            answer</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="modalRule2">
+                        <label class="custom-control-label" for="modalRule2">We have over 30 internal algorithms for determining suspicious behavior. If your answers and/or way
+                            you are answering the quizs even resembles suspicious behavior, your account and IP will be banned
+                            for life and your quizs will be invalid.</label>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="modalRule3">
+                        <label class="custom-control-label" for="modalRule3">Bottom line. If you aren't going to give truthful answers and take the surveys seriously, please
+                            don't waste your time. We have strict rules so that our quizs are high quality and therefore have
+                            zero tolerance for cheaters or abusers.</label>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="modalRulesSubmit">Accept Rules</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let RULES_ACCEPTED = 'RULES_ACCEPTED';
+        let accepted = localStorage.getItem(RULES_ACCEPTED);
+
+        if (!accepted) {
+            $('#modalRules').modal('show');
+            $('#modalRulesSubmit').on('click', ()=> {
+
+                for (i of [1,2,3]) {
+                    let item = $('#modalRule' + i);
+                    if (!item.is(':checked')) {
+                        return item.addClass('is-invalid');
+                    }
+                    item.removeClass('is-invalid');
+                }
+
+                localStorage.setItem(RULES_ACCEPTED, 'true');
+                $('#modalRules').modal('hide');
+            })
+        }
+
+
+    })
+</script>

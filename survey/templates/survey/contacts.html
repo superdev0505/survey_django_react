@@ -1,0 +1,84 @@
+{% extends 'survey/layout.html' %}
+
+{% block top_banner %}{% endblock %}
+
+{% block container_content %}
+
+    <div class="container sc-content flex-grow-1">
+
+        <h2>Contact us</h2>
+
+        <p>
+            If you have a website and would like to become partner with MoreTvTime.com OR you are a user and are having a problem with something, fill out the form below.
+        </p>
+
+        <div class="p-4">
+            <div class="form-group">
+                <label for="feedback-report-email">Email:</label>
+                <input class="form-control" rows="5" name="email" type="email" id="feedback-report-email"/>
+                <div class="invalid-feedback" style="display: none">Please enter Email</div>
+            </div>
+
+            <div class="form-group">
+                <label for="feedback-report-message">Message:</label>
+                <textarea class="form-control" rows="5" name="message" id="feedback-report-message"></textarea>
+            </div>
+
+            <div class="feedback-report-submit-container form-group d-flex justify-content-between align-items-center">
+
+                <div class="g-recaptcha" data-sitekey="{{ recaptcha_key }}"></div>
+
+            </div>
+            <button type="Submit" id="feedback-report-submit" class="btn btn-success">Submit</button>
+            <div id="feedback-send-message"></div>
+        </div>
+
+    </div>
+
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.0.6/fingerprint2.min.js"></script>
+    <script type="application/javascript">
+        document.addEventListener('DOMContentLoaded', () => {
+            let modalStatus = $('#feedback-send-message');
+
+            $('#feedback-report-submit').on('click', () => {
+                let captcha = $('[name=g-recaptcha-response]').val();
+                let message = $('#feedback-report-message').val();
+                let emailEl = $('#feedback-report-email');
+                let email = emailEl.val();
+
+                if (!email) {
+                    emailEl.addClass('is-invalid');
+                    emailEl.parent().addClass('has-danger');
+                    emailEl.parent().find('.invalid-feedback').show();
+                    return
+                } else {
+                    emailEl.removeClass('is-invalid');
+                    emailEl.parent().removeClass('has-danger');
+                    emailEl.parent().find('.invalid-feedback').hide();
+                }
+
+                Fingerprint2.get(function (fingerprint) {
+                    fingerprint = fingerprint.filter(i => i.key !== 'canvas' && i.key !== 'webgl');
+                    SV.fetch('/bug-report/?contacts=True', {captcha, message, email, fingerprint})
+                        .then(r => {
+                            modalStatus
+                                .addClass('valid-feedback')
+                                .text('Thank you for your report! We will deal with it as soon as possible.')
+                                .show();
+                            setTimeout(() => window.location.href = '/', 3000)
+                        })
+                        .catch(r => {
+                            modalStatus
+                                .addClass('invalid-feedback')
+                                .text(r.error)
+                                .show()
+                        })
+                })
+
+            })
+        })
+    </script>
+
+{% endblock %}
+
+

@@ -1,0 +1,31 @@
+{% extends 'dashboard/members_layout.html' %}
+{% block page_body %}
+<section class="content-header">
+   <h1>
+      Adding a site
+   </h1>
+</section>
+<section class="content">
+   <div class="col-md-12">
+      <div class="block-wrapper">
+         <div class="form-block block-vidjet">
+            <form id="form-add-site" method="post" role="section" class="form  ticket-from">
+               {% csrf_token %}
+               <div class="row">                 
+                  <div class="form-group col-md-5">
+                     <label for="Input_Site_Url">Web address:</label>
+                     <input type="text" id="Input_Site_Url" name="webaddress"
+                        class="field js-add-site form-control" autocomplete="off" tabindex="1" value="" required/>
+                  </div>                  
+               </div>
+               <div class="row">
+                  <div class="col-md-4">
+                     <button class="btn btn-header btn-mini" type="submit">Add</button>
+                  </div>
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</section>
+{% endblock %}

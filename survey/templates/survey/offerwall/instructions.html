@@ -1,0 +1,105 @@
+{% load static %}
+
+{#<button type="button" class="btn btn-success" data-toggle="modal" data-target="#offerwallHelp">#}
+{#    NEED HELP?#}
+{#</button>#}
+
+<!-- Modal -->
+<div class="modal fade" id="offerwallHelp" tabindex="-1" role="dialog" aria-labelledby="Help" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Help</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {% if bitcoin %}
+
+                    <ul class="mb-0">
+                        <li>
+                            Step 1- Add your bitcoin address and click Save
+
+                            <img src="{% static 'survey/img/offerwall/step0.png' %}" class="img-fluid">
+                        </li>
+                        <br/>
+                        <hr/>
+                        <br/>
+                        <li>
+                            Step 2- Click on the green button below.
+
+                            <img src="{% static 'survey/img/offerwall/step1.png' %}" class="img-fluid">
+                        </li>
+                        <br/>
+                        <hr/>
+                        <br/>
+                        <li>
+                            Step 3- You will be forwarded to Google.com. Click on the first listing that says MoreTvTime.com.
+                            <img src="{% static 'survey/img/offerwall/step2.png' %}" class="img-fluid">
+                        </li>
+                        <br/>
+                        <hr/>
+                        <br/>
+                        <li>
+                            Step 4- Enter you referral id <span class="text-success ref-link" data-link="{{ reference.id }}">
+                                {{ reference.id }} &nbsp; <i class="far fa-copy sc-pointer sc-btn-copy" data-link="{{ reference.id }}"></i>
+                            </span>
+                            <img src="{% static 'survey/img/offerwall/step3.png' %}" class="img-fluid">
+                        </li>
+                        <br/>
+                        <hr/>
+                        <br/>
+                        <li>
+                            Step 5- Register
+                            <img src="{% static 'survey/img/offerwall/step4.png' %}" class="img-fluid">
+                        </li>
+                        <br/>
+                        <hr/>
+                        <br/>
+                        <li>
+                            Step 6- Start earning
+                            <img src="{% static 'survey/img/offerwall/step5.png' %}" class="img-fluid">
+                        </li>
+                    </ul>
+                {% else %}
+
+
+                    <ul class="mb-0">
+                        <li>
+                            Step 1- Click on the green button below.
+
+                            <img src="{% static 'survey/img/offerwall/step1.png' %}" class="img-fluid">
+                        </li>
+                        <br/>
+                        <li>
+                            Step 2- You will be forwarded to Google.com. Click on the first listing that says MoreTvTime.com.
+                            <img src="{% static 'survey/img/offerwall/step2.png' %}" class="img-fluid">
+                        </li>
+                        <br/>
+                        <li>
+                            Step 3- Enter you referral id
+                            <span class="text-success ref-link" data-link="{{ reference.id }}">
+                                {{ reference.id }} &nbsp; <i class="far fa-copy sc-pointer sc-btn-copy" data-link="{{ reference.id }}"></i>
+                            </span>
+                            <img src="{% static 'survey/img/offerwall/step3.png' %}" class="img-fluid">
+                        </li>
+                        <br/>
+                        <li>
+                            Step 4- Register
+                            <img src="{% static 'survey/img/offerwall/step4.png' %}" class="img-fluid">
+                        </li>
+                        <br/>
+                        <li>
+                            Step 5- Start earning
+                            <img src="{% static 'survey/img/offerwall/step5.png' %}" class="img-fluid">
+                        </li>
+                    </ul>
+                {% endif %}
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

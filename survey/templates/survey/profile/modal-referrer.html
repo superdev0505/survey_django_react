@@ -1,0 +1,70 @@
+{% load static %}
+
+<div class="modal fade" id="modalReferrer" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content text-center">
+
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">
+                    Add new RefererId there
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="content m-4">
+                    <div class="form-group">
+                        <input type="text" placeholder="Referral ID" class="form-control" id="new_ref_id" rows="3"/>
+                    </div>
+
+                    <button id="btn-referrer-send" class="btn btn-outline-success">Add</button>
+
+                    <div id="btn-referrer-add-message"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.0.6/fingerprint2.min.js"></script>
+<script type="application/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        let modal = $('#modalReferrer');
+        let modalStatus = $('#btn-referrer-add-message');
+
+        $('#btn-referrer-send').on('click', () => {
+            let ref_id = $('#new_ref_id').val();
+
+            if (!ref_id) {
+                return modalStatus
+                    .addClass('invalid-feedback')
+                    .text('Please fill RefId')
+                    .show()
+            }
+
+            Fingerprint2.get(function (components) {
+                SV.fetch('/add_ref/', {ref_id, fp: JSON.stringify(components)})
+                    .then(r => {
+                        modal.modal('hide');
+                        modalStatus
+                            .addClass('valid-feedback')
+                            .text('Successfully saved!')
+                            .show();
+                        setTimeout(() => window.location.href = '/profile/', 2000)
+                    })
+                    .catch(r => {
+                        modalStatus
+                            .addClass('invalid-feedback')
+                            .text(r.error)
+                            .show()
+                    })
+            });
+
+        })
+    })
+</script>

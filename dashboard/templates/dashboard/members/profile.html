@@ -1,0 +1,41 @@
+{% extends 'dashboard/members_layout.html' %}
+{% block page_body %}
+<section class="content-header" xmlns="http://www.w3.org/1999/html">
+   <h1>
+      Profile settings 
+   </h1>
+</section>
+<section class="content">
+   <div class="col-md-12">      
+      <div class="block-wrapper">
+         {{password}}
+         <div class="form-block block-profile">
+            Profile settings
+            <div style="overflow: auto;">
+               <form role="section" action="change_password" class="form settings-form" method="post" id="form-email-pass">
+                  {% csrf_token %}
+                  <div class="form-group col-md-4">
+                     <label for="camp-add-input-1">New password:</label>
+                     <input name="old_password" type="password" required class="form-control" id="camp-add-input-1">
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="camp-add-input-1">Repeat the new password:</label>
+                     <input name="cpassword" type="password" required class="form-control" id="camp-add-input-1">
+                  </div>
+                  <div class="form-group col-md-4">
+                     <label for="camp-add-input-1">Current password:</label>
+                     <input name="password" type="password" required class="form-control" id="camp-add-input-1">
+                  </div>
+                  <button type="submit" class="btn btn-header" >Save</button>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+{% if status %}
+    <div id="snackbar">{{status}}</div>
+{% endif %}   
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% load static %}
+
+{% include 'survey/components/feedback.html' %}
+
+<div class="modal fade" id="modalAdblock" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body mx-5">
+                <h4 class="modal-title">Turn off adblock!</h4>
+
+                <div class="content my-4">
+                    <p>
+                        Our website is made possible by displaying online advertisements to our visitors. Disable your
+                        adblocker on our website.
+                    </p>
+                    <p>
+                        If you have done that and you still see this message, it means one of your browser extensions has an
+                        adblocker feature. Be sure to disable the extension causing the problem.
+                    </p>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="/" class="btn btn-outline-danger">I understand, I have disabled my ad blocker. <br/>Let me in!</a>
+                </div>
+
+                <div class="text-center my-3">
+                    <button id="btn-feedback-adblock" type="button" class="btn btn-outline-success border-0">I still see error! It's a mistake</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    function adBlockDetected() {
+        SV.showModal('#modalAdblock');
+        SV.state.adblock = true;
+        fetch('/analytics?adblock=true')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        {# uBlock detection fix #}
+        //let uBlockTestURL = 'https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.0.6/fingerprint2.min.js';
+        //let requestParams = {
+        //    method: 'HEAD',
+        //    mode: 'no-cors'
+        //};
+        //let checkUBlockRequest = new Request(uBlockTestURL, requestParams);
+        //fetch(checkUBlockRequest).then(function(response) {})
+        //  .then(function(response) {})
+        //  .catch(function(e){
+        //    adBlockDetected();
+        //});
+        if (typeof window.blockAdBlock === 'undefined') {
+            adBlockDetected();
+        } else {
+            window.blockAdBlock.onDetected(adBlockDetected);
+            window.blockAdBlock.on(true, adBlockDetected);
+            window.blockAdBlock.on(true, adBlockDetected);
+        }
+
+        window.blockAdBlock.setOption({
+            debug: true,
+            checkOnLoad: true,
+            resetOnEnd: true
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('btn-feedback-adblock').addEventListener('click', () => {
+            $('#modalAdblock').modal('hide');
+            SV.state.feedback = 'adblock';
+            $('#modalFeedback').modal('show');
+        })
+    })
+</script>

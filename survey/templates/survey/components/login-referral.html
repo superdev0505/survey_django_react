@@ -1,0 +1,22 @@
+<div class="modal-body mx-3">
+
+    <p class="text-primary text-center">To start the Voting Quiz, please provide your referral ID. </p>
+
+    <div class="mb-2" id="referral-id-container">
+        <input type="text" id="referral-id" placeholder="Referral ID" class="form-control validate">
+        <div class="invalid-feedback"></div>
+    </div>
+
+    <div class="d-flex justify-content-center">
+        <button id="login-button" class="btn btn-success">Sign Up</button>
+    </div>
+
+    <hr class="mt-4 mb-2">
+
+    {% if user.is_anonymous or not user.ref_id %}
+        <div class="d-flex text-secondary">
+            <div>or <a href="{% url 'survey:login' %}">Login</a> using existing account</div>
+        </div>
+    {% endif %}
+
+</div>

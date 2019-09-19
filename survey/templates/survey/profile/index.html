@@ -1,0 +1,186 @@
+{% extends 'survey/layout.html' %}
+
+{% block top_banner %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block popup-list %}{% endblock %}
+
+{% block content %}
+
+    {% include 'survey/profile/modal-referrer.html' %}
+
+    <div class="card border-secondary mb-3">
+        <div class="card-body">
+            <div class="card-title d-flex align-items-center">
+                <span class="sc-font-25 pr-2">User Profile</span>
+                <span class="text-muted"> - Information can be changed only 2 times in 24 hours</span>
+            </div>
+            <br/>
+            <fieldset class="card-text">
+
+                <div class="form-group row">
+                    <label for="user" class="col-sm-2 col-form-label disabled">Username</label>
+                    <div class="col-sm-10">
+                        <input type="text" readonly="" class="form-control-plaintext" id="user" value="{{ user }}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="ref_id" class="col-sm-2 col-form-label disabled">Referral Link</label>
+                    <div class="col-sm-10 d-flex flex-row">
+                        <select id="ref_id" class="form-control">
+                            {% for ref in user.ref_id_history.all %}
+                                <option {% if user.ref_id == ref.id %} selected {% endif %} value="{{ ref.id }}">{{ ref.id }} - {{ ref.provider.name }} - {{ ref.provider_user_id }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <button type="button" class="btn btn-success ml-2 flex-grow-1" id="btn-user-add-ref">
+                            Add
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <div id="user-save-error"></div>
+                    <button type="button" class="btn btn-link" id="btn-user-save">
+                        Save
+                    </button>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="card border-secondary mb-3">
+        <div class="card-body">
+            <h4 class="card-title">Social Networks</h4>
+            
+            {% for network in associated_networks %}
+            
+                <div class="d-flex align-items-center profile-social-section">
+                    {% if network.provider == 'google-oauth2' %}
+                        <a>
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-google"></i>
+                            </button>
+                        </a>
+                    {% elif network.provider == 'facebook' %}
+                        <a href="{% url 'social:begin' 'facebook' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-facebook"></i>
+                            </button>
+                        </a>
+                    {% elif network.provider == 'twitter' %}
+                        <a href="{% url 'social:begin' 'twitter' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-twitter"></i>
+                            </button>
+                        </a>
+                    {% elif network.provider == 'twitch' %}
+                        <a href="{% url 'social:begin' 'twitch' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-twitch"></i>
+                            </button>
+                        </a>
+                    {% elif network.provider == 'discord' %}
+                        <a href="{% url 'social:begin' 'discord' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-discord"></i>
+                            </button>
+                        </a>
+                    {% elif network.provider == 'vk-oauth2' %}
+                        <a href="{% url 'social:begin' 'vk-oauth2' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-vk"></i>
+                            </button>
+                        </a>
+                    {% endif %}
+
+                    <span>- {{ network }}</span>
+                </div>
+            {% endfor %}
+
+            {% if not_associated_networks %}
+                <div class="d-flex align-items-center profile-social-section">
+                {% for network in not_associated_networks %}
+
+                    {% if network == 'google-oauth2' %}
+                        <a href="{% url 'social:begin' 'google-oauth2' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-google"></i>
+                            </button>
+                        </a>
+                    {% elif network == 'facebook' %}
+                        <a href="{% url 'social:begin' 'facebook' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-facebook"></i>
+                            </button>
+                        </a>
+                    {% elif network == 'twitter' %}
+                        <a href="{% url 'social:begin' 'twitter' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-twitter"></i>
+                            </button>
+                        </a>
+                    {% elif network == 'twitch' %}
+                        <a href="{% url 'social:begin' 'twitch' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-twitch"></i>
+                            </button>
+                        </a>
+                    {% elif network == 'discord' %}
+                        <a href="{% url 'social:begin' 'discord' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-discord"></i>
+                            </button>
+                        </a>
+                    {% elif network == 'vk-oauth2' %}
+                        <a href="{% url 'social:begin' 'vk-oauth2' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-vk"></i>
+                            </button>
+                        </a>
+                    {% endif %}
+
+                    <span>- click to associate with {{ network }} </span>
+
+                {% endfor %}
+            {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        <form action="/logout/" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-link">Logout</button>
+        </form>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let error = document.getElementById('user-save-error');
+
+            document.getElementById('btn-user-add-ref').addEventListener('click', () => $('#modalReferrer').modal('show'));
+
+            document.getElementById('btn-user-save').addEventListener('click', () => {
+                SV.fetch('/profile/', {
+                    ref_id: document.getElementById('ref_id').value,
+                }).then(r => {
+                    error.classList.add("valid-feedback");
+                    error.classList.remove("invalid-feedback");
+                    error.innerText = 'Successfully saved';
+                    error.style.display = 'block';
+                }).catch(e => {
+                    error.classList.add("invalid-feedback");
+                    error.classList.remove("valid-feedback");
+                    error.innerText = e.error;
+                    error.style.display = 'block';
+                })
+            })
+        })
+
+    </script>
+
+{% endblock %}

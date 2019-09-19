@@ -1,0 +1,73 @@
+<div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">
+                    {% if login %}
+                        Login
+                    {% elif user.username and not user.provider %}
+                        Associate referral ID
+                    {% else %}
+                        Sign Up
+                    {% endif %}
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% if login %}
+
+                {% include 'survey/components/login-social.html' %}
+
+            {% elif user.is_anonymous or not user.provider %}
+
+                {% include 'survey/components/login-referral.html' %}
+
+            {% else %}
+
+                {% include 'survey/components/login-social.html' %}
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        let loginButton = $('#login-button');
+
+        loginButton.on('click', () => {
+            let ref_id = $('#referral-id').val();
+
+            SV.fetch('/signup/', {ref_id})
+                .then(r => {
+                    $('#modalLoginForm').modal('hide');
+                    window.location = '/'
+                })
+                .catch(r => {
+                    $('#referral-id').addClass('is-invalid');
+                    $('#referral-id-container').addClass('has-danger');
+                    $('#referral-id-container .invalid-feedback').text(r.error)
+                })
+        });
+
+        let path = window.location.pathname;
+        if ( (path === '/' || path === '/login/') && (SV.is_guest() || !SV.is_authorized())) {
+            $('#modalLoginForm').modal('show');
+        }
+
+        let hash = window.location.hash.slice(1);
+        switch(hash) {
+            case 'already_associated':
+                $('#social-login .invalid-feedback')
+                    .text('Selected user is already associated with another Ref ID select another network')
+                    .show()
+        }
+
+    })
+</script>

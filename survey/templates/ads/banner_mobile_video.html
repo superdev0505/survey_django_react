@@ -1,0 +1,49 @@
+{% load static %}
+
+{# VIDEO #}
+
+{% if is_mobile and show_articles %}
+    <div id="sc-banner-video" style="display: none">
+        {{ banner_video.url }}
+    </div>
+
+    <div class="sc-banner-video-container mx-auto mt-4">
+        <button type="button" class="sc-banner-video-close" aria-label="close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <video id="content_video"
+               autoplay
+               muted
+               style="height: 180px;width: 240px;text-align: center;"
+               class="video-js vjs-default-skin mx-auto" controls preload="auto"
+               width="auto" height="120">
+            <source src='/static/survey/video/moretvtime.mp4' type="video/mp4"></source>
+        </video>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const delta = 200;
+            let lastScrollTop = 0;
+            const banner = $('.sc-banner-video-container');
+            const bannerCls = $('.sc-banner-video-close');
+            const staticClass = 'sc-banner-video-static';
+
+            window.addEventListener('scroll', () => {
+                const pageTop = window.scrollY;
+
+                if(Math.abs(lastScrollTop - pageTop) <= delta){
+                    return banner.removeClass(staticClass)
+                }
+                banner.addClass(staticClass)
+            });
+
+            const closeEvent = () => banner.hide();
+            bannerCls.on('click', closeEvent);
+            bannerCls.on('tap', closeEvent)
+        })
+    </script>
+{% endif %}
+
+{# VIDEO #}

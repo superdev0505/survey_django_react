@@ -1,0 +1,46 @@
+
+{% if show_banners %}
+
+    {% load static %}
+
+    <script src="{% static 'js/ads.js' %}" type="application/javascript"></script>
+
+    <div class="modal" id="adblock-modal">
+        <div class="modal-background"></div>
+        <div class="modal-content box-deep-shadow box-border-grey">
+            <header class="modal-card-head">
+            </header>
+            <div class="modal-card-body">
+                <article class="media" style="padding-top: 16px;">
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img alt="Image" src="/static/images/stop.svg">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                Our website is made possible by displaying online advertisements to our visitors. Disable your adblocker on our website.
+                            </p>
+                            <p>
+                                If you have done that and you still see this message, it means one of your browser extensions has an adblocker feature. Be sure to disable the extension causing the problem.
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    {% if not is_mobile %}
+        <script type="application/javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                if (!document.getElementById('9c22a072fe12b216676fc812f1433d78')) {
+                    document.querySelector('#adblock-modal').classList.add('is-active');
+                    fetch('/analytics?adblock=true')
+                }
+            });
+        </script>
+    {% endif %}
+
+{% endif %}

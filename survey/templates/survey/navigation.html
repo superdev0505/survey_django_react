@@ -1,0 +1,134 @@
+{% load static %}
+{% load trans %}
+
+<nav id="navigation-top" class="navbar navbar-expand-lg bg-primary navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <img class="sc-logo"
+                 alt="logo" data-toggle="tooltip"
+                 src="{% static 'survey/img/logo_new_white.png' %}"
+                 data-placement="right" title="" data-original-title="Tooltip on right">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+                    <a class="nav-link" href="/">{% trans 'Home' %}</a>
+                </li>
+                <li class="nav-item {% if request.path == '/survey/' %}active{% endif %}">
+                    <a class="nav-link" href="/survey">{% trans 'Voting Quiz' %}</a>
+                </li>
+                <li class="nav-item {% if request.path == '/privacy/' %}active{% endif %}">
+                    <a class="nav-link" href="/privacy">{% trans 'Privacy' %}</a>
+                </li>
+                <li class="nav-item {% if request.path == '/contacts/' %}active{% endif %}">
+                    <a class="nav-link" href="/contacts">{% trans 'Contact Us' %}</a>
+                </li>
+                {% if show_articles %}
+                    <li class="nav-item {% if request.path == '/blog/' %}active{% endif %}">
+                        <a class="nav-link" href="/blog">{% trans 'Blog' %}</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+            <ul class="m-auto" id="sc-language-sel">
+                <li class="nav-item">
+                    {% include 'survey/components/select-language.html' %}
+                </li>
+            </ul>
+
+            {% if show_feedback or is_test_user or request.path == '/contacts/' %}
+            {% else %}
+                <ul class="m-auto" id="sc-report-bug-btn">
+                    <li class="nav-item">
+                        {% include 'survey/components/button-report-bug.html' %}
+                    </li>
+                </ul>
+            {% endif %}
+
+            <ul class="nav navbar-nav ml-auto" id="logged-nav">
+
+                {% if user.is_authenticated and user.is_registered %}
+                    <li class="nav-item">
+                        <a id="login-link" class="btn btn-outline-success" data-provider="{{ user.provider }}" data-user="{{ user }}"
+                           data-authorized="{{ user.social_auth.count }}"
+                           href="#" data-email="{{ user.email }}">
+                            {{ user.provider.name }} - {{ user }}
+                            &nbsp;
+                            <i class="fas fa-user"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+
+                        <button id='change-id-btn' class="btn btn-outline-success ml-3" style="color: yellow; border-color: yellow" data-toggle="modal" data-target="#changeReferralID">Change Referral ID</button>
+
+                        <div class="modal fade" id="changeReferralID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+
+                                <div class="modal-content">
+                                    <div class="modal-header pl-4">
+                                        <h6 class="modal-title">
+                                            Change Referral ID
+                                        </h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body p-4">
+                                        <p style="font-size:1.5rem" class="font-weight-bold text-center">
+                                            Here is How to Change Your Referral ID
+                                        </p>
+                                         <p class="text-left">
+                                            Step 1) Click the logout button
+                                        </p>
+                                        <div id='logout-content' class="mb-2">
+                                            <button type="button" id='change-id' class="d-block btn btn-success">
+                                                Logout
+                                            </button>
+                                        </div>
+                                        <p class="text-left">
+                                        Step 2) After step 1, now come to our site from a different partner site and the referral ID will automatically be changed
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                {% else %}{% endif %}
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<script type="application/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('change-id').addEventListener('click', () => {
+        SV.fetch('/api/user/logout', {})
+          .then(response => {
+            let uri = window.location.toString();
+	        if (uri.indexOf("?") > 0) {
+	            let clean_uri = uri.substring(0, uri.indexOf("?"));
+	            window.history.replaceState({}, document.title, clean_uri);
+            }
+            document.getElementById('change-id-btn').remove();
+            document.getElementById('login-link').remove();
+            document.getElementById('sc-report-bug-btn').remove();
+            document.getElementById('logout-content').innerHTML=
+              "<p style='color: green; font-size:1.2rem;'>Logged out successfully</p>";
+          })
+          .catch(error => {
+            SV.showMessage('Something went wrong')
+          })
+      });
+    });
+</script>

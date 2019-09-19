@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=10">
+
+        <title>{{ site_title|default:"Jungle Survey" }}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'survey/style.css' %}" />
+        <link rel="stylesheet" href="{% static 'survey/bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+        <script src="{% static 'survey/vendor/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'survey/vendor/jquery-3.3.1.slim.min.js' %}"></script>
+        <script src="{% static 'survey/vendor/bootstrap.min.js' %}"></script>
+        <script src="{% static 'survey/vendor/popper.min.js' %}"></script>
+        <script src="{% static 'survey/main.js' %}"></script>
+
+        {% block banner_head_mapping %}
+            {% include 'ads/banner_head_mapping.html' %}
+        {% endblock %}
+
+    </head>
+    <body>
+
+        {% block navigation %}
+            {% include 'survey/navigation.html' %}
+        {% endblock %}
+
+        {% block progressbar %}
+
+        {% endblock %}
+
+        {% block top_banner %}
+            <div class="container sc-banner d-flex justify-content-center align-items-center sc-banner-top">
+                {% include 'ads/banner_top.html' %}
+            </div>
+        {% endblock %}
+
+
+        <div class="container container-custom mb-5 flex-grow-1">
+            <div class="d-flex justify-content-between">
+
+                {% block container_content %}
+                    <div class="sc-banner m-1 sc-banner-left">
+                        {% block left_banner %}
+                            {% include 'ads/banner_left.html' %}
+                        {% endblock %}
+                    </div>
+                    <div class="sc-content flex-grow-1">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                    <div class="sc-banner m-1 sc-banner-right">
+                        {% block right_banner %}
+                            {% include 'ads/banner_right.html' %}
+                        {% endblock %}
+                    </div>
+                {% endblock %}
+
+            </div>
+
+            {% if is_mobile %}
+                {% block bottom_banner %}
+                    {% include 'ads/banner_sticky.html' %}
+                    {% include 'ads/banner_mobile_sticky_bottom.html' %}
+                {% endblock %}
+            {% endif %}
+        </div>
+
+        {% block footer %}
+            {% include 'survey/footer.html' %}
+        {% endblock %}
+
+
+        {% csrf_token %}
+        {% block popup-list %}
+            {% include 'survey/components/login.html' %}
+            {% include 'survey/components/privacy-banner.html' %}
+            {% include 'survey/survey/popup-rules.html' %}
+            {% include 'survey/survey/popup-warning.html' %}
+        {% endblock %}
+        {% block popup-public %}
+            {% include 'survey/survey/popup-event.html' %}
+        {% endblock %}
+    </body>
+</html>

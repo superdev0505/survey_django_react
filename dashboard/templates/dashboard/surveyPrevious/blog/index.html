@@ -1,0 +1,40 @@
+{% extends 'survey/layout.html' %}
+
+{% block top_banner %}{% endblock %}
+
+{% block container_content %}
+
+    <div class="container sc-content flex-grow-1">
+
+        <ol class="breadcrumb bg-transparent">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/blog">    Blog</a></li>
+            <li class="breadcrumb-item active">{{ blog_page.id }}</li>
+        </ol>
+
+        <h2>Online Surveys</h2>
+
+        {% for page in blog_pages %}
+
+            <div class="card border-primary mb-3">
+                <div class="card-body">
+                    <a href="/blog/{{ page.id }}">
+                        <h4 class="card-title">{{ page.title }}</h4>
+                    </a>
+                    <p>{{ page.created }}</p>
+                    <p class="card-text">{{ page.body_short }}</p>
+                    <a href="/blog/{{ page.id }}">
+                        <div class="text-right">Read more...</div>
+                    </a>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block popup-list %}{% endblock %}

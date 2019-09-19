@@ -1,0 +1,62 @@
+{% load static %}
+
+<nav id="navigation-top" class="navbar navbar-expand-lg bg-primary navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <img class="sc-logo"
+                 alt="logo" data-toggle="tooltip"
+                 src="{% static 'survey/img/logo.png' %}"
+                 data-placement="right" title="" data-original-title="Tooltip on right">
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item {% if request.path == '/' %}active{% endif %}">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item {% if request.path == '/survey/' %}active{% endif %}">
+                    <a class="nav-link" href="/survey">Survey</a>
+                </li>
+                <li class="nav-item {% if request.path == '/privacy/' %}active{% endif %}">
+                    <a class="nav-link" href="/privacy">Privacy</a>
+                </li>
+                <li class="nav-item {% if request.path == '/contacts/' %}active{% endif %}">
+                    <a class="nav-link" href="/contacts">Contact Us</a>
+                </li>
+                <li class="nav-item {% if request.path == '/blog/' %}active{% endif %}">
+                    <a class="nav-link" href="/blog">Blog</a>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav ml-auto">
+
+                <li class="nav-item">
+                    {% if user.email %}
+                        <a id="login-link" class="nav-link" data-provider="{{ user.provider }}" data-user="{{ user }}"
+                           href="{% url 'survey:profile' %}" data-email="{{ user.email }}">
+                            Logged in as {{ user }}
+                        </a>
+                    {% else %}
+                        <a id="login-link" class="nav-link" data-provider="{{ user.provider }}" data-user="{{ user }}"
+                           href="" data-toggle="modal" data-target="#modalLoginForm">
+                            {% if not user.is_authenticated %}
+                                Login
+                            {% elif not user.provider %}
+                                Logged in as Guest
+                            {% else %}
+                                Logged in as {{ user }}
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                </li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>

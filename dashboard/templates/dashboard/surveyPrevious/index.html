@@ -1,0 +1,25 @@
+{% extends 'survey/layout.html' %}
+
+{% block content %}
+
+    <h2>
+        Welcome to MoreTvTime.com
+    </h2>
+    <p>To get started with our online surveys you can click on the button below.</p>
+    <p>Most of our online survey questionnaires contain 10 questions.</p>
+    <p>Survey research companies rely upon honest and accurate answers. If the online surveys you complete have contradicting answers, they won’t be counted as valid.</p>
+    <p>After you complete one of our online surveys, you will have the option to continue to begin the next survey,</p>
+    <p>We work with many Survey research companies so there is no shortage of survey questionnaire opportunities!</p>
+    <p>None of the survey questions will ever ask you for personal identification questions such as your email, phone or address. You are 100% anonymous. Feel free to refer to our privacy policy for more details.</p>
+    <p>It’s crucial that you provide us with truthful and thoughtful answers. Providing false information in surveys, speeding or attempting to defraud the market research will result in a block and your surveys will be invalid.</p>
+    <p>We have several internal algorithms in place to detect the truthfulness of your answers and look for contradictions between answers from similar questions. For example, we repeat some questions from every survey on purpose to see if you will provide the same answer. If we notice contradictions, then we can’t trust the data and the survey will be invalid.</p>
+    <p>It’s highly recommended that you write down your answers to be sure you are always providing the same information.</p>
+    <p>As long as you take your time and think how you are answering you will be fine.</p>
+
+    <div class="d-flex justify-content-center p-5">
+        <a href="{% url 'survey:survey' %}" class="sc-btn-start-survey">
+            <button type="button" class="btn btn-success btn-lg">I WANT TO START THE ONLINE SURVEYS</button>
+        </a>
+    </div>
+
+{% endblock %}

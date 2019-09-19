@@ -1,0 +1,65 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
+
+{% block content_title %}
+<h1>
+    <a href="{% url 'survey:index' %}" title="{% trans 'App' %}">
+        <span class="glyphicon glyphicon-play-circle"></span>
+    </a>
+    <span class="django-admin-title">Survey Admin &raquo;</span>
+    Survey Results
+</h1>
+{% endblock %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+    <li class="home">
+        <a href="{% url 'admin:index' %}" title="{% trans 'Home' %}">
+            <span class="glyphicon glyphicon-home"></span>
+        </a>
+    </li>
+    <li class="active">Survey Results</li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div class="panel panel-default" id="apps">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>{% trans "Question" %}</th>
+                    <th>{% trans "Choices" %}</th>
+                    <th>{% trans "Votes" %}</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+                {% for question_text, choices in survey_results.items %}
+                {% cycle 'bg-colored' 'bg-white' as rowcolors silent %}
+                {% for choice_text, votes in choices.items %}
+                <tr class="results {{ rowcolors }}">
+
+                    {% if forloop.first %}
+                    <td rowspan="{{ choices|length }}">
+                        {{ question_text }}
+                    </td>
+                    {% endif %}
+
+                    <td>
+                        {{ choice_text }}
+                    </td>
+
+                    <td>
+                        {{ votes }}
+                    </td>
+
+                </tr>
+                {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

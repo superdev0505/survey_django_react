@@ -1,0 +1,119 @@
+{% extends 'dashboard/members_layout.html' %}
+{% block page_body %}
+<head><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+</script></head>
+   <h1 style="
+    margin-bottom: 20px;color: #1a6eb7;
+    font-weight: 600;margin-left: 11%;">
+   </h1>
+
+   <style >
+.form-control
+{
+  width:50% !important;
+}
+    .banner-form{
+      min-height: 30px !important;
+    }
+label{
+  font-size: 16px;
+    font-weight: 800;
+}
+</style>
+<section >
+  <div class="col-lg-8 col-md-8 col-lg-offset-2">
+    <form role="form" method="POST" class="form-container">
+      {% csrf_token %}
+      <div class="bannerform">
+        <input type="hidden" name="banners" id="banners" value="0"> 
+      <div class="col-lg-2 col-lg-offset-1">
+          <label class="control-label ">Banner Size</label>
+      </div>
+      <div class="col-lg-9">
+        <select id="bannersize" name="0_bannersize" class="form-control cs_bannersize" style="padding-bottom: : 10px;">
+          {% for bnsize in form.bannersize %}
+            <option >{{bnsize}}</option>
+            {% endfor %}
+       
+      </select>
+     <!--   <div class="form-group banner-form">
+          {{form.bannersize}}
+        </div>  -->
+      </div>
+      <div class="col-lg-2 col-lg-offset-1">
+        <label class="control-label">Partner Name</label>
+      </div>
+      <div class="col-lg-9">
+        <div class="form-group banner-form">
+          <input name="0_partnername" cols="0" rows="1" class="form-control cs_partnername" id="id_partnername"></input>
+        </div>
+      </div>
+      <div class="col-lg-2 col-lg-offset-1">
+        <label class="col-sm-3 control-label">Head</label>
+      </div>
+      <div class="col-lg-9">
+        <div class="form-group banner-form">
+          <input name="0_head" cols="0" rows="1" class="form-control cs_head" id="id_head"></input>
+        </div>
+      </div>
+      <div class="col-lg-2 col-lg-offset-1">
+        <label  class="control-label">Body</label>
+      </div>
+      <div class="col-lg-9">
+        <div class="form-group banner-form">
+          
+          <textarea name="0_body" cols="0" rows="3" class="form-control cs_body" id="id_body"></textarea>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-lg-offset-1">
+          <label class="col-sm-3 control-label">Ratio</label>
+      </div>
+      <div class="col-lg-9">
+        <div class="form-group banner-form">
+         <input type="number" name="0_ratio" class="form-control cs_ratio" min="0" id="id_ratio">
+          
+        </div>
+        
+      </div>
+        </div> 
+       </div>
+        <div class="col-lg-7" style="min-height: 20px;">
+          <br>
+            <button type="button" class="btn btn-info add-banner" style="float:right;">+</button> 
+          <br>
+        </div>
+
+      <div style="clear: both;"></div>
+        
+        <div class="col-lg-7 " style="padding: 10px;">    
+          <button type="submit" class="btn btn-primary" style="float:right;">Submit</button>   
+        </div>
+        <div style="clear: both;"></div>
+        <div class="col-lg-7" style="min-height: 20px;">
+        </div>
+ 
+    </form> 
+</section>
+<script type="text/javascript">
+  jQuery('#id_bannersize').addClass('form-control');
+
+  var initialVal=0
+
+  $(".add-banner").click(function(){
+    initialVal = parseInt(initialVal)+1
+      var clonedForm = $(".bannerform").first().clone();
+      $(".form-container").append("<div style='clear:both;'></div><hr style='margin:10px;background:grey;height:2px;' />");
+    clonedForm.find(".cs_bannersize").attr("name", initialVal + "_bannersize");
+    clonedForm.find(".cs_partnername").attr("name", initialVal + "_partnername");
+    clonedForm.find(".cs_head").attr("name", initialVal+ "_head");
+    clonedForm.find(".cs_body").attr("name", initialVal+ "_body");
+    clonedForm.find(".cs_ratio").attr("name", initialVal + "_ratio");
+
+
+      $(".form-container").append(clonedForm);
+  });
+
+  
+</script>
+{% endblock %}

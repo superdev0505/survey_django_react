@@ -1,0 +1,21 @@
+{% load static %}
+
+<div class="container container-custom flex-grow-1">
+    <div class="px-5 pt-3 d-flex align-items-baseline">
+        <div class="mr-auto">
+            <a class="navbar-brand" href="/">
+                <img class="sc-logo" src="{% static 'survey/img/logo_offerwall.png' %}" alt="logo" data-toggle="tooltip"
+                     data-placement="right" title="" data-original-title="Tooltip on right">
+                Jungle Offerwall
+            </a>
+        </div>
+
+        {% if not request.user.is_anonymous and user.first_name %}
+            <div>
+                <a>
+                    Logged in as {{ user.first_name }}&nbsp;{{  user.last_name }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>

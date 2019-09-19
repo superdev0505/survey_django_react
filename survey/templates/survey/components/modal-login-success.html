@@ -1,0 +1,31 @@
+<div class="modal fade" id="modalLoginSuccess" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">
+                    Login Success
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+            <div class="modal-body mx-3">
+
+                <p class="text-primary text-center">Ok, you are ready to start the Voting Quiz! Click on the green button below to begin!</p>
+
+                <div class="d-flex justify-content-center p-2">
+                    <a href="{% url 'survey:survey' %}">
+                        <button type="button" class="btn btn-success btn-lg">Start Survey</button>
+                    </a>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</div>

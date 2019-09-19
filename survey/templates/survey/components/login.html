@@ -1,0 +1,96 @@
+<div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">
+                    {% if login %}
+                        Login
+                    {% elif user.username and not user.provider %}
+                        Associate referral ID
+                    {% elif not user.is_anonymous and user.social_auth.count %}
+
+                    {% else %}
+                        Sign Up
+                    {% endif %}
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% if login %}
+
+                {% include 'survey/components/login-social.html' %}
+
+{#            {% elif user.is_anonymous or not user.provider %}#}
+{##}
+{#                {% include 'survey/components/login-referral.html' %}#}
+
+            {% elif not user.is_anonymous and user.social_auth.count %}
+
+                {% include 'survey/components/login-referral-additional.html' %}
+
+            {% else %}
+
+                {% include 'survey/components/login-social.html' %}
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const showError = error => {
+        $('#referral-id').addClass('is-invalid');
+        $('#referral-id-container').addClass('has-danger');
+        $('#referral-id-container .invalid-feedback').text(error)
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        let loginButton = $('#login-button');
+        let loginModal = $('#modalLoginForm');
+        let messageErr = $('#message-error').text();
+        let refIdField = $('#referral-id');
+        let initialRefId = new URLSearchParams(window.location.search).get('ref_id');
+
+        initialRefId && refIdField.val(initialRefId);
+        initialRefId && loginModal.modal('show');
+
+        loginButton.on('click', () => {
+            let ref_id = refIdField.val();
+
+            SV.fetch('/signup/', {ref_id})
+                .then(r => {
+                    $('#modalLoginForm').modal('hide');
+                    window.location = '/'
+                })
+                .catch(r => showError(e.error))
+        });
+
+        let path = window.location.pathname;
+        if ( (path === '/' || path === '/login/' || !!path.match('/article.*/')) && (!SV.is_guest() && !SV.is_authorized())) {
+            loginModal.modal('show');
+        }
+        if ( (path === '/referer/') && SV.is_authorized()) {
+            loginModal.modal('show');
+        }
+        if ( messageErr ) {
+            showError(messageErr)
+        }
+
+        let hash = window.location.hash.slice(1);
+        switch(hash) {
+            case 'already_associated':
+                return $('#social-login .invalid-feedback')
+                    .text('Selected user is already associated with another Ref ID select another network')
+                    .show();
+            case 'social_auth_required':
+                return loginModal.modal('show');
+        }
+
+    })
+</script>

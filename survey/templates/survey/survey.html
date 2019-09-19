@@ -1,0 +1,265 @@
+{% extends 'survey/layout.html' %}
+
+{% load trans %}
+
+{% if article and show_articles %}
+    {% block site_title %}{{ article.title }}{% endblock %}
+{% endif %}
+
+{% block extra_static %}
+    {% if is_swagbucks %}
+        <script src="https://js.entertainow.com/js/Geae6SMxtVi79PW"></script>
+    {% endif %}
+{% endblock %}
+
+{% block extra_meta %}
+    {% if article and show_articles %}
+        <meta name="description" content="{{ article.text|truncatechars:100 }}"/>
+    {% endif %}
+{% endblock %}
+
+{% block progressbar %}
+    {% include 'survey/survey/progressbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+{#    {% if user.provider and not progress %}#}
+{#        <div class="d-flex align-items-center content-box ">#}
+{#            <div class="sc-rules-popup alert alert-dismissible alert-primary mx-auto mt-2 pl-5">#}
+{#                <button type="button" class="close" data-dismiss="alert">&times;</button>#}
+{#                <h4>#}
+{#                    TWO IMPORTANT RULES!#}
+{#                </h4>#}
+{#                <p style="white-space: pre-line">#}
+{#                    1) 1 out of 10 questions will be repeated. Contradicting answers won't be counted as valid.#}
+{#                    2) Random 'Attention check question' will be asked. Incorrect answers won't be counted as valid.#}
+{#                </p>#}
+{#            </div>#}
+{#        </div>#}
+{#    {% endif %}#}
+
+    {% if question is not None %}
+
+{#        <h3 class="text-danger">Choose the blue or red answer and then click on the 'Next' button.</h3>#}
+
+        <h3 class="sc-selection">{{ question.text }}</h3>
+
+        <form id="survey-form" action="/vote/?next_article={{ next_article }}" method="post" class="sc-selection">
+            {% csrf_token %}
+
+            <fieldset>
+                {% if question.answer_type == 'vote' %}
+
+                    {% include 'survey/survey/choice-vote.html' %}
+
+                {% else %}
+
+                    <div class="form-group d-flex flex-wrap justify-content-between mb-0">
+                        {% if question.answer_type == 'textarea' %}
+
+                            <textarea class="border-secondary w-100" type="{{ question.answer_type }}" name="choice" id="choice1" value=""></textarea>
+
+                        {% else %}
+                            {% for choice in choices %}
+
+                                <div class="col-lg-5 custom-control custom-{{ question.answer_type }}">
+                                    <input type="{{ question.answer_type }}" id="choice{{ forloop.counter }}" value="{{ choice.id }}" name="choice" class="custom-control-input">
+                                    <label class="custom-control-label " for="choice{{ forloop.counter }}">
+
+                                        <div class="card border-secondary mb-3">
+                                            <div class="card-body border-primary">
+                                                {{ choice.text }}
+                                            </div>
+                                        </div>
+
+                                    </label>
+                                </div>
+
+                            {% endfor %}
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+            </fieldset>
+
+            {% if is_mobile %}
+                <div class="sc-banner sc-banner-intext-mobile mb-1 mt-3">
+                    {% include 'ads/banner_intext.html' %}
+                </div>
+            {% else %}
+                {% block top_banner %}
+                    <div class="container sc-banner d-flex justify-content-center align-items-center sc-banner-top">
+                        {% include 'ads/banner_top.html' %}
+                    </div>
+                {% endblock %}
+            {% endif %}
+
+            <div class="d-flex justify-content-end flex-wrap flex-column align-items-center">
+                {#                <button class="sc-survey-navigation btn btn-primary disabled" type="submit">Previous</button>#}
+
+                <div id="timer">
+                    In <span id="timer-text" class="text-success">{{ timer }}</span> seconds you may continue.
+                </div>
+
+                <button class="sc-survey-navigation btn btn-primary disabled" type="submit">{% trans 'Next' %}</button>
+            </div>
+
+            {% if not is_mobile %}
+                <div class="w-100 text-center mt-3">
+                    <div class="sc-banner sc-banner-intext mb-3 ml-3 text-center mx-auto">
+                        {% include 'ads/banner_intext.html' %}
+                    </div>
+                </div>
+            {% endif %}
+
+        </form>
+
+        {% if error_message %}
+            <div class="alert alert-warning">
+                <strong>Warning!</strong> {{ error_message }}
+            </div>
+        {% endif %}
+
+        <div class="d-flex flex-row mt-3 justify-content-between sc-banner-intext-placeholder">
+
+            <div>
+                <h2>
+                    {% if article and show_articles %}
+                        {{ article.title }}
+                    {% else %}
+                        Important Information
+                    {% endif %}
+                </h2>
+
+                {% if article and show_articles %}
+                    <p class="sc-article-text">
+                        {{ article.text }}
+                    </p>
+                {% else %}
+                    {% include 'survey/survey/rules.html' %}
+                {% endif %}
+            </div>
+
+        </div>
+
+    {% elif all_answered %}
+
+        <div class="d-flex justify-content-center flex-column">
+            {% if survey_error %}
+                <div class="sc-card-success card border-danger mb-3 mx-auto">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="fas fa-4x fa-times-circle sc-color-danger mr-2"></i>
+                        <div class="flex-grow-1">
+                            <h4 class="card-title text-center">I’m sorry, but your Voting Quiz is invalid.</h4>
+                            <p class="card-text text-center">{{ survey_error }}</p>
+                        </div>
+                    </div>
+                </div>
+                <audio autoplay>
+                    <source src="/static/survey/audio/incorrect_answer.wav" type="audio/wav">
+                </audio>
+            {% else %}
+                <div class="sc-card-success card border-success mb-3 mx-auto">
+                    <div class="card-body d-flex align-items-center">
+                        <i class="fas fa-4x fa-check-circle sc-color-success mr-2"></i>
+                        <div class="flex-grow-1">
+                            <h4 class="card-title text-center">Thank you for completing the Voting Quiz.</h4>
+                            <p class="card-text text-center">It was found valid. Click on the next button to continue with another Voting Quiz.</p>
+                        </div>
+                    </div>
+                </div>
+                <audio autoplay>
+                    <source src="/static/survey/audio/correct_answer.wav" type="audio/wav">
+                </audio>
+            {% endif %}
+
+            <div class="btn-group">
+                <div class="mx-auto">
+                    <a href="/survey"
+                       class="btn btn-success">
+                        START NEXT VOTING QUIZ
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            let timerEl = $('#timer');
+            let timerTextEl = $('#timer-text');
+            let navigationEl = $('.sc-survey-navigation');
+            let interstitial = $('.sc-banner-interstitial');
+            let bottomBannerBtn = $('.sc-banner-sticky .close');
+            let interstitialClose = $('.sc-banner-interstitial-header .btn');
+            let interstitialPassed = false;
+
+            let timer = parseInt(timerTextEl.text());
+            let interval = setInterval(() => {
+                if (timer <= 0) {
+                    timerEl.css({visibility: 'hidden'});
+                    navigationEl.addClass('btn-success');
+                    navigationEl.removeClass('btn-primary');
+                    return clearInterval(interval)
+                }
+                timer = timer - 1;
+                timerTextEl.text(timer)
+            }, 1000);
+
+            const onSubmit = e => {
+                if (SV.state.adblock) {
+                    e.preventDefault();
+                    return SV.showModal('#modalAdblock');
+                }
+
+                if (timer > 0) {
+                    e.preventDefault();
+                    return SV.showMessage('You have to wait till the timer ends.')
+                }
+                if ($('form').serialize().split('&').length <= 1) {
+                    e.preventDefault();
+                    return SV.showMessage('You have to choose one ore more answers to continue.');
+                }
+                if (interstitial[0] && !interstitialPassed) {
+                    e.preventDefault();
+                    interstitial.show();
+                    bottomBannerBtn.click();
+                    const closeEvent = () => {
+                        interstitialPassed = true;
+                        $('.sc-banner-interstitial-header .sc-button').hide();
+                        $('.sc-banner-interstitial-header .sc-spinner').show();
+                        navigationEl.click();
+                        {% if is_swagbucks %}ncrvFireEvent();{% endif %}
+                    };
+
+                    interstitialClose.on('click', closeEvent);
+                    interstitialClose.on('tap', closeEvent);
+                } else {
+                    {% if is_swagbucks %}ncrvFireEvent();{% endif %}
+                    SV.fetch('/analytics/',{m: Array.from(mm), mc: SV.mc, kd: SV.kd, s: document.getElementById('ssm').innerText})
+                    navigationEl.off('click', onSubmit);
+                }
+            };
+
+            navigationEl.on('click', onSubmit)
+        })
+
+    </script>
+
+    {% if show_feedback or is_test_user %}
+        {% include 'survey/components/email-feedback.html' %}
+    {% endif %}
+
+{% endblock %}
+
+{% block mobile_interstitial %}
+    {% if is_mobile %}
+        {% include 'ads/banner_interstitial.html' %}
+    {% endif %}
+{% endblock %}

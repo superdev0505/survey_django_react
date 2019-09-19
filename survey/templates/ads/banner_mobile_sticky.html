@@ -1,0 +1,19 @@
+
+<div class="sc-banner m-1 sc-banner-sticky" style="margin: 0 auto!important;">
+    <div id='{{ banner_bottom.id }}' class="sc-banner-sticky-body">
+        <script>
+            googletag.cmd.push(function() { googletag.display('{{ banner_bottom.id }}'); });
+        </script>
+    </div>
+    <button type="button" class="close" aria-label="close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelector('.sc-banner-sticky .close').addEventListener('click', () => {
+            document.querySelector('.sc-banner-sticky').style.display = 'none'
+        })
+    })
+</script>

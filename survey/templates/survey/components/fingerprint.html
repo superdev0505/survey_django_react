@@ -1,0 +1,11 @@
+
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.0.6/fingerprint2.min.js"></script>
+<script type="application/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        Fingerprint2.get(function (fingerprint) {
+            SV.fetch('/analytics/', {fingerprint: fingerprint.filter(i => i.key !== 'canvas' && i.key !== 'webgl')})
+                .then(r => {})
+                .catch(r => {})
+        })
+    })
+</script>

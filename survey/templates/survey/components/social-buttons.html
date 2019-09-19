@@ -1,0 +1,56 @@
+<div class="dd-flex justify-content-center">
+    <a href="{% url 'social:begin' 'google-oauth2' %}">
+        <button type="button" class="btn login-gmail btn-link sc-btn-very-large">
+            <i class="fab fa-google"></i>
+            <div class="social-login-info">
+            <h4>Google</h4>
+            <p>Login with your Google account</p>
+            </div>
+        </button>
+    </a>
+    <a href="{% url 'social:begin' 'facebook' %}">
+        <button type="button" class="btn login-facebook btn-link sc-btn-very-large">
+            <i class="fab fa-facebook-f"></i>
+            <div class="social-login-info">
+            <h4>Facebook</h4>
+            <p>Login with your Facebook account</p>
+            </div>
+        </button>
+    </a>
+    <a href="{% url 'social:begin' 'twitter' %}">
+        <button type="button" class="btn login-twitter btn-link sc-btn-very-large">
+            <i class="fab fa-twitter"></i>
+            <div class="social-login-info">
+            <h4>Twitter</h4>
+            <p>Login with your Twitter account</p>
+            </div>
+        </button>
+    </a>
+    <a href="{% url 'social:begin' 'twitch' %}">
+        <button type="button" class="btn login-twitch btn-link sc-btn-very-large">
+            <i class="fab fa-twitch"></i>
+            <div class="social-login-info">
+            <h4>Twitch</h4>
+            <p>Login with your Twitch account</p>
+            </div>
+        </button>
+    </a>
+    <a href="{% url 'social:begin' 'discord' %}">
+        <button type="button" class="btn login-discord btn-link sc-btn-very-large">
+            <i class="fab fa-discord"></i>
+            <div class="social-login-info">
+            <h4>Discord</h4>
+            <p>Login with your Discord account</p>
+            </div>
+        </button>
+    </a>
+    <a href="{% url 'social:begin' 'vk-oauth2' %}">
+        <button type="button" class="btn login-vk btn-link sc-btn-very-large">
+            <i class="fab fa-vk"></i>
+            <div class="social-login-info">
+            <h4>VK</h4>
+            <p>Login with your VK account</p>
+            </div>
+        </button>
+    </a>
+</div>

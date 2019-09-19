@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+    <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=10">
+
+        {% block extra_meta %}
+
+        {% endblock %}
+
+        <title>{% block site_title %}{{ site_title|default:"MoreTvTime is happy to host Jungle Survey" }}{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'survey/style.css' %}" />
+        <link rel="stylesheet" href="{% static 'survey/bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="/static/survey/videojs/video-js.min.css">
+        <link rel="stylesheet" href="/static/survey/videojs/videojs.ads.css"/>
+        <link rel="stylesheet" href="/static/survey/videojs/videojs.ima.css"/>
+
+{#        <script src="{% static 'survey/vendor/jquery-3.1.1.min.js' %}"></script>#}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="{% static 'survey/vendor/jquery-3.3.1.slim.min.js' %}"></script>
+        <script src="{% static 'survey/vendor/popper.min.js' %}"></script>
+        <script src="{% static 'survey/vendor/bootstrap.min.js' %}"></script>
+        <script src="{% static 'survey/vendor/blockadblock.js' %}"></script>
+        <script src="{% static 'survey/main.js' %}"></script>
+
+        {% block analytics %}
+            {% include 'survey/components/google-analytics.html' %}
+        {% endblock %}
+
+        {% block extra_static %}
+
+        {% endblock %}
+
+        {% block banner_head_mapping %}
+            {% include 'ads/banner_head_mapping.html' %}
+        {% endblock %}
+
+        {% block banner_head %}
+            {% include 'ads/banner_head.html' %}
+        {% endblock %}
+
+        {% block extra_ads %}
+            {% include 'ads/extra_ads.html' %}
+        {% endblock %}
+
+    </head>
+    <body>
+
+        {% block navigation %}
+            {% include 'survey/navigation.html' %}
+        {% endblock %}
+
+        {% block progressbar %}
+
+        {% endblock %}
+
+{#        {% block mobile_top_video %}#}
+{#            {% include 'ads/banner_mobile_video.html' %}#}
+{#        {% endblock %}#}
+
+        {% block mobile_top_banner %}
+            {% if is_mobile and not all_answered %}
+                {% include 'ads/banner_mobile_top.html' %}
+            {% endif %}
+        {% endblock %}
+
+        <div class="container container-custom mb-5 flex-grow-1">
+            <div class="d-flex justify-content-between">
+
+                {% block container_content %}
+                    <div class="sc-banner m-1 sc-container-left">
+                        {% block left_banner %}
+                            {% include 'ads/banner_left_video.html' %}
+                            {% include 'ads/banner_left.html' %}
+                        {% endblock %}
+                    </div>
+                    <div class="sc-content flex-grow-1">
+                        {% block content %}
+                        {% endblock %}
+                    </div>
+                    <div class="sc-banner m-1 sc-container-right">
+                        {% block right_banner %}
+                            {% include 'ads/banner_right.html' %}
+                        {% endblock %}
+                    </div>
+
+                    {% block mobile_interstitial %}{% endblock %}
+
+                    {% block bottom_banner %}
+                        {% if is_mobile %}
+                            {% include 'ads/banner_mobile_sticky.html' %}
+                            {% include 'ads/banner_mobile_sticky_bottom.html' %}
+                        {% else %}
+                            {% if banner_sticky_desktop.id %}
+                                {% include 'ads/banner_desktop_sticky.html' %}
+                            {% endif %}
+                        {% endif %}
+                    {% endblock %}
+
+                {% endblock %}
+
+            </div>
+        </div>
+
+        {% block footer %}
+            {% include 'survey/footer.html' %}
+        {% endblock %}
+
+
+        {% csrf_token %}
+
+        {% block popup-list %}
+            {% include 'survey/components/antiadblock.html' %}
+            {% include 'survey/components/privacy-banner.html' %}
+{#            {% include 'survey/survey/popup-rules.html' %}#}
+            {% include 'survey/survey/popup-warning.html' %}
+            <div class="static-popper"></div>
+        {% endblock %}
+
+        {% block popup-public %}
+            {% include 'survey/survey/popup-event.html' %}
+        {% endblock %}
+
+{#        {% if user_authorized and not is_mobile %}#}
+{#            {% include 'survey/components/popup-move-to-mobile.html' %}#}
+{#        {% endif %}#}
+
+        {#  TODO tail.digital code   #}
+            <!-- TailTarget Tag Manager TT-13484-8/CT-1195 -->
+            <script>
+                (function(i) {
+                    var ts = document.createElement('script');
+                    ts.type = 'text/javascript';
+                    ts.async = true;
+                    ts.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'tags.t.tailtarget.com/t3m.js?i=' + i;
+                    var s = document.getElementsByTagName('script')[0];
+                    s.parentNode.insertBefore(ts, s);
+                })('TT-13484-8/CT-1195');
+            </script>
+            <!-- End TailTarget Tag Manager -->
+
+        {% block fingerprint %}
+            {% if fingerprint %}
+                {% include 'survey/components/fingerprint.html' %}
+            {% endif %}
+        {% endblock %}
+
+        <div id="ssm" style="display: none">{{ proof_sign }}</div>
+        <div id="message-error" style="display: none">{{ error }}</div>
+
+        <script src='/static/survey/videojs/video.min.js'></script>
+        <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+        <script src='/static/survey/videojs/videojs.ads.min.js'></script>
+        <script src='/static/survey/videojs/videojs.ima.js'></script>
+        <script src='/static/survey/videojs/ads-video.js'></script>
+    </body>
+
+</html>

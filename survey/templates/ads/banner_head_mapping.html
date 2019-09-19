@@ -1,0 +1,25 @@
+<script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>
+<script async src="https://lupon.media/prebid/prebid9.js"></script>
+
+<script>
+    var googletag = googletag || {};
+    googletag.cmd = googletag.cmd || [];
+</script>
+
+<script async src="{{ bidding_url }}"></script>
+
+<script>
+    googletag.cmd.push(function() {
+
+    {% for banner in banners %}
+        {% if banner.type != "video" %}
+            googletag.defineSlot('{{ banner.url }}', {{ banner.size }}, '{{ banner.id }}').addService(googletag.pubads());
+        {% endif %}
+    {% endfor %}
+        googletag.pubads().disableInitialLoad();
+        googletag.pubads().enableSingleRequest();
+        googletag.pubads().collapseEmptyDivs();
+        googletag.enableServices();
+    });
+
+</script>

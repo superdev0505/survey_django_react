@@ -1,0 +1,26 @@
+{% extends 'survey/layout.html' %}
+{% load static %}
+
+{% block navigation %}
+    {% include 'survey/offerwall/navigation.html' %}
+{% endblock %}
+
+{% block top_banner %}{% endblock %}
+
+{% block container_content %}
+
+    <div class="sc-content flex-grow-1 text-center">
+
+        <div>Current Referral ID already associated with one of Social Account, please login using buttons below</div>
+
+        {% include 'survey/components/social-buttons.html' %}
+
+    </div>
+
+{% endblock %}
+
+
+{% block footer %}
+{% endblock %}
+
+{% block popup-list %}{% endblock %}

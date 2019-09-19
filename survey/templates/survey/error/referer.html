@@ -1,0 +1,31 @@
+{% extends 'survey/layout.html' %}
+{% load static %}
+
+{% block analytics %}{% endblock %}
+{% block navigation %}{% endblock %}
+{% block top_banner %}{% endblock %}
+
+{% block container_content %}
+
+    <div class="sc-content flex-grow-1 text-center">
+
+        <h3>Wrong referer</h3>
+
+        <div class="m-5">
+            <p>
+                In order to use our website, go to Google, Bing or Yahoo search engine and type in MoreTvTime and
+                click on our domain and then you will have access and may complete surveys. Alternatively you can type
+                in MoreTvTime.com directly into your url.
+            </p>
+            <div class="m-2 sc-font-25"><a href="https://google.com/search?q=site:moretvtime.com">Google</a></div>
+            <div class="m-2 sc-font-25"><a href="https://search.yahoo.com/search?p=site:moretvtime.com">Yahoo</a></div>
+            <div class="m-2 sc-font-25"><a href="https://www.bing.com/search?q=site:moretvtime.com">Bing</a></div>
+            <div class="m-2 sc-font-25"><a href="https://yandex.ru/search/?text=site:moretvtime.com">Yandex</a></div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
+{% block popup-list %}{% endblock %}

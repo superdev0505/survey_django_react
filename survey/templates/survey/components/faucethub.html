@@ -1,0 +1,98 @@
+<div class="modal fade" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">
+                    {% if user.username and user.provider != 'guest' %}
+                        Associate referral ID
+                    {% else %}
+                        Sign Up
+                    {% endif %}
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% if user.is_anonymous or not user.provider%}
+
+                <div class="modal-body mx-3">
+
+                    <p class="text-primary text-center">To start the Voting Quiz, please provide your referral ID.</p>
+
+                    <div class="mb-2" id="referral-id-container">
+                        <input type="text" id="referral-id" placeholder="Referral ID" class="form-control validate">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer d-flex justify-content-center">
+                    <button id="login-button" class="btn btn-success">Login</button>
+                </div>
+
+            {% else %}
+
+                <div id="social-login" class="modal-body mx-3">
+
+                    <p class="text-primary text-center">To start the Voting Quiz, please login using one of Social network below.</p>
+
+                    <div class="d-flex justify-content-center">
+                        <a href="{% url 'social:begin' 'google-oauth2' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-google"></i>
+                            </button>
+                        </a>
+                        <a href="{% url 'social:begin' 'facebook' %}">
+                            <button type="button" class="btn btn-link sc-btn-very-large">
+                                <i class="fab fa-facebook"></i>
+                            </button>
+                        </a>
+                    </div>
+                    <div class="invalid-feedback"></div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        let loginLink = $('#login-link');
+        let loginButton = $('#login-button');
+
+        loginButton.on('click', () => {
+            let ref_id = $('#referral-id').val();
+
+            SV.fetch('/login/', {ref_id})
+                .then(r => {
+                    $('#modalLoginForm').modal('hide');
+                    window.location = '/'
+                })
+                .catch(r => {
+                    $('#referral-id').addClass('is-invalid');
+                    $('#referral-id-container').addClass('has-danger');
+                    $('#referral-id-container .invalid-feedback').text(r.error)
+                })
+        });
+
+        if (window.location.pathname === '/' && (SV.is_guest() || !SV.is_authorized())) {
+            $('#modalLoginForm').modal('show');
+        }
+
+        let hash = window.location.hash.slice(1);
+        switch(hash) {
+            case 'already_associated':
+                $('#social-login .invalid-feedback')
+                    .text('Selected user is already associated with another Ref ID select another network')
+                    .show()
+        }
+
+    })
+</script>

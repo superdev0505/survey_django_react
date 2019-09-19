@@ -1,0 +1,75 @@
+{% extends 'dashboard/members_layout.html' %}
+{% block page_body %}
+<section class="content-header">
+    <h1>
+        Dashboard
+    </h1>
+</section>
+<section class="content dashboard">
+    <div class="dashboard-title">Current month revenue: <span>{{revenu_total_t.totalmoney}} USD</span></div>
+    <div class="block-wrapper">
+      <div id="container"></div>
+      <script src="https://code.highcharts.com/highcharts.src.js"></script>
+        <script>
+          var days = {{days_list_ordinal|safe}}
+          Highcharts.chart('container', {
+              chart: {
+                  type: 'column'
+              },
+              title: {
+                  text: 'Total revenue of one month'
+              },
+              tooltip: {
+                  formatter: function () {
+                      return '<b>' + days[this.x] +
+                          '</b> is <b>$' + this.y + '</b>';
+                  }
+              },
+              xAxis: {                  
+                  categories: {{days_list}}                  
+              },
+              yAxis: {
+                title: {
+                    text: 'USD'
+                }
+              },  
+
+              series: [{                                                 
+                  name: '{{chart_month}}',
+                  data:{{revenue_list_with_data}}                  
+              },]
+          });
+        </script>      
+      
+    </div>
+    <div class="col-md-3">
+        <div class="block-wrapper dashboard-block">
+            <div class="dashboard-stat-header">Today's revenue from referals</div>
+            <div class="dashboard-dynamic-good">$ {{r_today}} USD</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="block-wrapper dashboard-block">
+            <div class="dashboard-stat-header">Yesterday's revenue</div>
+            <div class="dashboard-dynamic-good">$ {{r_yesterday}} USD</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="block-wrapper dashboard-block">
+            <div class="dashboard-stat-header">Total revenue from referrals this month</div>
+            <div class="dashboard-dynamic-good">
+               $ {{today}}
+
+                </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="block-wrapper dashboard-block">
+            <div class="dashboard-stat-header">Total revenue this month</div>
+            <div class="dashboard-dynamic-good">
+            $ {{yesterday}}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

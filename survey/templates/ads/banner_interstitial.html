@@ -1,0 +1,17 @@
+<div class="sc-banner-interstitial" style="display: none" >
+    <div class="sc-banner-interstitial-header">
+        <button type="button" class="btn sc-button">
+            Close &times;
+        </button>
+        <button class="btn sc-spinner" type="button" style="display: none">
+            Loading...
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        </button>
+    </div>
+
+    <div id='{{ banner_interstitial.id }}' class="sc-banner-interstitial-body">
+        <script>
+            googletag.cmd.push(function() { googletag.display('{{ banner_interstitial.id }}'); });
+        </script>
+    </div>
+</div>

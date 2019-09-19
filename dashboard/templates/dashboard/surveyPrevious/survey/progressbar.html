@@ -1,0 +1,21 @@
+<div id="progressbar" class="container d-flex align-items-center content-box">
+
+    {% if daily_limit %}
+        <div id="progressbar-counter">You have reached the daily {% if views_limit %}{{ views_limit }}{% else %}150{% endif %} survey limit. In 24 hours you can continue.</div>
+    {% else %}
+
+        <div class="flex-grow-1">
+            <div id="progressbar-text" class="blinking-text text-center">
+                <span class="text-primary font-weight-bold"> {{ progress }}% complete</span>
+            </div>
+
+            <div id="progressbar-value">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ progress }}%" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+
+    {% endif  %}
+
+</div>

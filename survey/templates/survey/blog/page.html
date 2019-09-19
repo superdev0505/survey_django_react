@@ -1,0 +1,24 @@
+{% extends 'survey/layout.html' %}
+
+{% block top_banner %}{% endblock %}
+
+{% block container_content %}
+
+    <div class="container sc-content flex-grow-1">
+
+        <ol class="breadcrumb bg-transparent">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/blog">Blog</a></li>
+            <li class="breadcrumb-item active">{{ blog_page.id }}</li>
+        </ol>
+
+        <h2>{{ blog_page.title }}</h2>
+
+        <p class="sc-text-wrap">
+            {{ blog_page.body }}
+        </p>
+
+    </div>
+
+{% endblock %}
+

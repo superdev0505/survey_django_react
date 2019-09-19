@@ -1,0 +1,63 @@
+{% load static %}
+
+<div class="modal fade" id="modalFeedback" tabindex="-1" role="dialog"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body m-5">
+                <h4 class="modal-title">Please write your issue there</h4>
+
+                <div class="content m-4">
+                    <div class="form-group">
+                        <textarea class="form-control" id="feedback" rows="3"></textarea>
+                    </div>
+
+
+                    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+                    <div class="g-recaptcha" data-sitekey="{{ recaptcha_key }}"></div>
+
+                    <button id="btn-feedback-send" class="btn btn-outline-success">Send</button>
+
+                    <div id="btn-feedback-send-message"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.0.6/fingerprint2.min.js"></script>
+<script type="application/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        let modal = $('#modalFeedback');
+        let modalStatus = $('#btn-feedback-send-message');
+
+        $('#btn-feedback-send').on('click', () => {
+            let captcha = $('[name=g-recaptcha-response]').val();
+            let text = $('#feedback').val();
+            let type = SV.state.feedback;
+
+            Fingerprint2.get(function (components) {
+                SV.fetch('/feedback/', {captcha, text, type, fp: JSON.stringify(components)})
+                    .then(r => {
+                        $('#modalFeedback').modal('hide');
+                        modalStatus
+                            .addClass('valid-feedback')
+                            .text('Successfully saved!')
+                            .show();
+                        setTimeout(() => window.location.href = '/', 2000)
+                    })
+                    .catch(r => {
+                        modalStatus
+                            .addClass('invalid-feedback')
+                            .text(r.error)
+                            .show()
+                    })
+            });
+
+        })
+    })
+</script>

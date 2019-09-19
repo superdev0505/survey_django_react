@@ -1,0 +1,253 @@
+{% extends 'survey/layout.html' %}
+{% load static %}
+
+{% block extra_meta %}
+<meta name="referrer" content="no-referrer" />
+{% endblock %}
+
+{% block navigation %}
+    {% include 'survey/offerwall/navigation.html' %}
+{% endblock %}
+
+{% block banner_head_mapping %}{% endblock %}
+
+{% block analytics %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-142054059-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-142054059-1');
+    </script>
+{% endblock %}
+
+{% block top_banner %}{% endblock %}
+
+{% block bottom_banner %}{% endblock %}
+
+{% block mobile_top_video %}{% endblock %}
+
+{% block mobile_top_banner %}{% endblock %}
+
+{% block container_content %}
+
+    <div class="sc-content flex-grow-1 pt-1">
+
+        {% if error %}
+            <div class="card text-white bg-danger mb-3 text-center">
+                <div class="card-body">
+                    <p class="card-text">{{ error }}</p>
+                    <p class="card-text">Contact administrator of resource to continue</p>
+                </div>
+            </div>
+
+        {% endif %}
+
+{#        <div class="jumbotron">#}
+{#            <ul class="mb-0">#}
+{#                {% if bitcoin %}#}
+{#                    <li>Step 1- Add your bitcoin address</li>#}
+{#                    <li>Step 2- Click on the green button at the bottom of the page for Desktop or Mobile.</li>#}
+{#                    <li>Step 3- You will be forwarded to MoreTvTime and prompted to login.</li>#}
+{#                    <li>Step 4- Start earning</li>#}
+{#                {% else %}#}
+{#                    <li>Step 1- Click on the green button at the bottom of the page for Desktop or Mobile.</li>#}
+{#                    <li>Step 2- You will be forwarded to MoreTvTime and prompted to login.</li>#}
+{#                    <li>Step 3- Start earning</li>#}
+{#                {% endif %}#}
+{#            </ul>#}
+{##}
+{#            <div class="w-100 ml-2 mt-3">#}
+{#                {% include 'survey/offerwall/instructions.html' %}#}
+{#            </div>#}
+{#        </div>#}
+
+        {% if bitcoin %}
+
+            <div class="card border-danger mb-4" id="card-btc">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {% if bitcoin_masked %}
+                            If you would like to change your Faucethub wallet, you may edit in the field below and click on the save button
+                        {% else %}
+                            Add your FaucetHub.io bitcoin wallet to continue. <a href="//faucethub.io" target="_blank" rel="noreferrer nofollow">Create an account</a> here if you don't have one.
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body pt-0 d-flex justify-content-center align-items-center">
+                    <div class="card-text pr-5 flex-grow-1">
+                        <div>
+                            <input class="form-control sc-offerwall-bitcoin-address" type="text" placeholder="Your bitcoin address." value="{{ bitcoin_masked }}">
+                            <div class="invalid-feedback sc-font-18" style="display:none;">Please, enter your bitcoin address to continue</div>
+                        </div>
+                    </div>
+                    <a class="sc-offerwall-bitcoin-address-add" target="_blank" rel="nofollow">
+                        <button type="button" class="btn btn-success btn-large sc-btn-large">Save</button>
+                    </a>
+                </div>
+                <div class="sc-offerwall-bitcoin-spinner text-center" style="display:none">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+
+
+        <div class="card border-success mb-3 sc-offerwall-card">
+            <div class="card-header">Mobile/Tablet Offer</div>
+            <div class="card-body d-flex justify-content-center align-items-center">
+                <div class="sc-offerwall-thumb" >
+                    <img src="{% static 'survey/img/morequiztime.png' %}" alt="morequiztime"/>
+                </div>
+                <div class="d-flex flex-grow-1 justify-content-center align-items-center">
+                    <div class="position-relative sc-offerwall-img-wrap ml-2">
+                        <img class="sc-offerwall-most-popular" src="{% static 'survey/img/most-popular.png' %}" alt="mobile" class="img-thumbnail border-0">
+                        <img class="img-thumbnail border-0" src="{% static 'survey/img/mobile-tablet.svg' %}" alt="mobile">
+                    </div>
+                    <p class="card-text px-5 sc-font-20">Take short fun voting quizzes. Takes ~1 minute. Unlimited quizzes!</p>
+                    <a class="sc-offerwall-continue" onclick="ga('send', 'event', 'Offerwall', 'start', 'Start Campaign');"  {% if is_mobile %} href="https://moretvtime.com/survey/?ref_id={{ reference.id }}" {% endif %} target="_blank" rel="nofollow">
+                        <button type="button"
+                                class="btn btn-success btn-large sc-btn-large sc-font-20"
+                                data-container="body"
+                                {% if not is_mobile %}
+                                data-placement="left"
+                                data-toggle="popover"
+                                data-content="Please switch to Mobile or Tablet in order to do this offer."
+                                data-original-title="Wrong device"
+                                {% endif %}>
+                            {% if not provider.payout_hide %}
+                                +{{ amount_mobile }}<br/>
+                            {% endif %}
+                            {{ provider.currency }}
+                        </button>
+                    </a>
+                    {% if not is_mobile %}
+                        <img class="ml-2" alt="ref_id" src="/offerwall/qr/?ref_id={{ reference.id }}"/>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if not is_mobile %}
+        <div class="card border-success mb-3 sc-offerwall-card">
+            <div class="card-header">Desktop Offer</div>
+            <div class="card-body d-flex justify-content-center align-items-center">
+                <div class="sc-offerwall-thumb" >
+                    <img src="{% static 'survey/img/morequiztime.png' %}" alt="morequiztime"/>
+                </div>
+
+                <div class="d-flex flex-grow-1 justify-content-center align-items-center">
+                    <div class="position-relative sc-offerwall-img-wrap ml-2">
+                        <img src="{% static 'survey/img/desktop.svg' %}" alt="desktop" class="img-thumbnail border-0">
+                    </div>
+                    <p class="card-text px-5 sc-font-20">Take short fun voting quizzes. Takes ~1 minute. Unlimited quizzes!</p>
+                    <a class="sc-offerwall-continue" style="margin-right: 150px" {% if not is_mobile %} href="https://moretvtime.com/survey/?ref_id={{ reference.id }}" {% endif %} target="_blank" rel="nofollow">
+                        <button type="button"
+                                class="btn btn-success btn-large sc-btn-large"
+                                data-container="body"
+                                {% if is_mobile %}
+                                    data-placement="top"
+                                    data-toggle="popover"
+                                    data-content="You can't perform this offer since you aren't using a desktop computer. Please click on the mobile offer."
+                                    data-original-title="Wrong device"
+                                {% endif %}>
+                            {% if not provider.payout_hide %}
+                                +{{ amount_desktop }}<br/>
+                            {% endif %}
+                            {{ provider.currency }}
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+{#        <div class="jumbotron">#}
+{#            <ul class="mb-0">#}
+{#                If you already have an account with MoreTvTime and you want to change your referral ID, here is your ID <span class="text-success ref-link" data-link="{{ reference.id }}">#}
+{#                    {{ reference.id }} &nbsp; <i class="far fa-copy sc-pointer sc-btn-copy" data-link="{{ reference.id }}"></i>#}
+{#                </span>#}
+{#            </ul>#}
+{#        </div>#}
+
+        <div id="provider-name" style="display: none">{{ provider.name }}</div>
+        <div id="sub-id" style="display: none">{{ sub_id }}</div>
+        <div id="is-mobile" style="display: none">{{ is_mobile }}</div>
+
+    </div>
+
+    {% if bitcoin %}
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                let cardBTC = $('#card-btc');
+                let payoutAddress = $('.sc-offerwall-bitcoin-address');
+                let payoutAddressError = payoutAddress.parent().find('.invalid-feedback');
+                let payoutAddressAdd = $('.sc-offerwall-bitcoin-address-add');
+                let payoutSpinner = $('.sc-offerwall-bitcoin-spinner');
+                let isWrongAddress = false;
+
+                const validateAddress = e => {
+                    if (!payoutAddress.val() || isWrongAddress) {
+                        e && e.preventDefault();
+                        payoutAddressError.show();
+                        return false
+                    }
+                    return true
+                };
+
+                $('.sc-offerwall-continue').on('click', validateAddress);
+
+                payoutAddressAdd.on('click', e => {
+                    if (!payoutAddress.val()) {
+                        e && e.preventDefault();
+                        return payoutAddressError.show();
+                    }
+
+                    payoutSpinner.show();
+
+                    SV.fetch('/offerwall/profile/', {
+                        sub_id: $('#sub-id').text(),
+                        address: payoutAddress.val(),
+                        provider: $('#provider-name').text(),
+                    })
+                        .then(r => {
+                            isWrongAddress = false;
+                            payoutAddressError.show();
+                            payoutAddressError.text('Successfully added!');
+                            payoutAddress.addClass('is-valid');
+                            cardBTC.removeClass('border-danger').addClass('border-success');
+                            payoutAddressError.addClass('valid-feedback').removeClass('invalid-feedback');
+                            payoutAddressError.parent().addClass('has-success').removeClass('has-danger');
+                            payoutSpinner.hide()
+                        })
+                        .catch(r => {
+                            isWrongAddress = true;
+                            payoutAddressError.show();
+                            payoutAddressError.text(r.error);
+                            payoutSpinner.hide();
+
+                            payoutAddress.removeClass('is-valid');
+                            cardBTC.removeClass('border-success').addClass('border-danger');
+                            payoutAddressError.addClass('invalid-feedback').removeClass('valid-feedback');
+                            payoutAddressError.parent().addClass('has-danger').removeClass('has-success');
+                        })
+
+                })
+
+            })
+
+        </script>
+
+    {% endif %}
+
+{% endblock %}
+
+
+{% block footer %}{% endblock %}
+
+{% block popup-list %}{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'survey/layout.html' %}
+{% load static %}
+
+{% block top_banner %}{% endblock %}
+
+{% block container_content %}
+
+    {% include 'survey/components/feedback.html' %}
+
+    <div class="sc-content flex-grow-1 text-center container">
+
+
+        <h3>VPN Detected</h3>
+
+        <button type="button" class="btn btn-outline-danger sc-btn-very-large border-0">
+            <i class="fas fa-shield-alt"></i>
+        </button>
+
+        <div class="m-5">
+            <p>
+                Our system detects that you are using fraudulent IP, VPN or proxy.
+                Please use your real IP.
+            </p>
+            <div class="">
+                <button id="btn-feedback-vpn" type="button" class="btn btn-outline-success border-0">I'm not a VPN! It's a mistake</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            document.getElementById('btn-feedback-vpn').addEventListener('click', () => {
+                SV.state.feedback = 'vpn';
+                SV.showModal('#modalFeedback')
+            })
+        })
+
+    </script>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
+{% block popup-list %}{% endblock %}

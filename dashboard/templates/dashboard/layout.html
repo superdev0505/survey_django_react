@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+
+    <title>{% block title %} {{ app_title }} {% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/dashboard_main.css"/>
+    <link rel="icon" href="/static/images/{{ app_name }}.png"/>
+    <link rel="icon" href="/static/images/{{ app_name }}-55x55.png" sizes="32x32"/>
+    <link rel="icon" href="/static/images/{{ app_name }}.png" sizes="192x192"/>
+    <link rel="apple-touch-icon-precomposed" href="/static/images/{{ app_name }}.png"/>
+    <meta name="msapplication-TileImage" content="/static/images/{{ app_name }}.png"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script type="application/javascript" src="/static/js/dashboard_main.js"></script>
+    <script type="application/javascript" src="/static/js/blockadblock.js"></script>  
+
+
+</head>
+
+{% include 'ads/dashboard_google-analytics.html' %}
+
+<body>
+ <div class="dp" style="display: none;"> 
+  Our website is made possible by displaying online advertisements to our visitors.
+  Please consider supporting us by disabling your ad blocker.
+  <br>
+  <a href="/" class='message'>
+    I understand, I have disabled my ad blocker. Let me in!
+  </a>
+ </div> 
+
+{% block afterbody %}{% endblock %}
+
+{% include 'dashboard/common/header.html' %}
+
+{% block page_body %}{% endblock %}
+
+{% include 'dashboard/common/footer.html' %}
+
+<script type="application/javascript">
+      // Function called if AdBlock is not detected
+    function adBlockNotDetected() {
+        
+    }
+    // Function called if AdBlock is detected
+    function adBlockDetected() {     
+      $(".dp").show();
+      $("html").css("overflow", "hidden");
+      $('.top').remove(); 
+      $('.top_navbar').remove();     
+      $('.content-header').remove();            
+    }
+
+    // Recommended audit because AdBlock lock the file 'blockadblock.js' 
+    // If the file is not called, the variable does not exist 'blockAdBlock'
+    // This means that AdBlock is present
+    if(typeof blockAdBlock === 'undefined') {
+        adBlockDetected();
+    } else {
+        blockAdBlock.onDetected(adBlockDetected);
+        blockAdBlock.onNotDetected(adBlockNotDetected);
+        // and|or
+        blockAdBlock.on(true, adBlockDetected);
+        blockAdBlock.on(false, adBlockNotDetected);
+        // and|or
+        blockAdBlock.on(true, adBlockDetected).onNotDetected(adBlockNotDetected);
+    }
+
+    // and|or
+    blockAdBlock.setOption({
+        debug: true,
+        checkOnLoad: true,
+        resetOnEnd: true
+    });
+</script>
+</body>
+
+<script>
+
+// Instantiate the Bootstrap carousel
+// $('.multi-item-carousel').carousel({
+//   interval: false
+// });
+
+// for every slide in carousel, copy the next slide's item in the slide.
+// Do the same for the next, next item.
+$('.multi-item-carousel .item').each(function(){
+  var next = $(this).next();
+  if (!next.length) {
+    next = $(this).siblings(':first');
+  }
+  next.children(':first-child').clone().appendTo($(this));
+  
+  if (next.next().length>0) {
+    next.next().children(':first-child').clone().appendTo($(this));
+  } else {
+  	$(this).siblings(':first').children(':first-child').clone().appendTo($(this));
+  }
+});
+</script>
+</html>

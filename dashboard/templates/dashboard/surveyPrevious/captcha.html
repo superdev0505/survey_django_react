@@ -1,0 +1,38 @@
+{% extends 'survey/layout.html' %}
+
+{% block top_banner %}{% endblock %}
+
+{% block container_content %}
+
+    <div class="mt-5 h-100 w-100 d-flex flex-column align-items-center">
+        <h4>Please solve Math Captcha to continue</h4>
+
+        <div id="captcha" class="card border-primary mb-3" style="max-width: 20rem;">
+            <div class="card-body">
+
+                <form method="post" href="/survey">
+
+                    <div class="d-flex justify-content-around flex-column form-group">
+                        <img src="data:image/png;base64, {{ captcha_image }}"/>
+                        <input name="solution" class="form-control mt-4" type="text" value=""/>
+                    </div>
+
+                    {% if captcha_wrong %}
+                        <div class="invalid-feedback">Wrong captcha!</div>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-center">
+                        <input type="submit" class="btn btn-success" value="Submit"/>
+                    </div>
+                    <input name="uuid" type="hidden" value="{{ captcha_uuid }}"/>
+                    {% csrf_token %}
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block bottom_banner %}{% endblock %}

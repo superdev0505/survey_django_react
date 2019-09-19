@@ -1,0 +1,143 @@
+{% extends 'survey/layout.html' %}
+
+{% block progressbar %}
+    {% include 'survey/survey/progressbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+    {% if question is not None %}
+        <h3 class="sc-selection">{{ question.text }}</h3>
+
+        <form id="survey-form" action="{% url 'survey:vote' %}" method="post" class="sc-selection">
+            {% csrf_token %}
+
+            <fieldset>
+                <div class="form-group d-flex flex-wrap justify-content-between mb-0">
+                    {% if question.answer_type == 'textarea' %}
+
+                        <textarea class="border-secondary w-100" type="{{ question.answer_type }}" name="choice" id="choice1" value=""></textarea>
+
+                    {% else %}
+                        {% for choice in choices %}
+
+                            <div class="col-lg-5 custom-control custom-{{ question.answer_type }}">
+                                <input type="{{ question.answer_type }}" id="choice{{ forloop.counter }}" value="{{ choice.id }}" name="choice" class="custom-control-input">
+                                <label class="custom-control-label " for="choice{{ forloop.counter }}">
+
+                                    <div class="card border-secondary mb-3">
+                                        <div class="card-body border-primary">
+                                            {{ choice.text }}
+                                        </div>
+                                    </div>
+
+                                </label>
+                            </div>
+
+                        {% endfor %}
+                    {% endif %}
+
+                </div>
+            </fieldset>
+
+            <div class="d-flex justify-content-end flex-wrap flex-column align-items-end">
+{#                <button class="sc-survey-navigation btn btn-primary disabled" type="submit">Previous</button>#}
+
+                <div id="timer">
+                    In <span id="timer-text" class="text-success">{{ timer }}</span> seconds you may continue.
+                </div>
+
+                <button class="sc-survey-navigation btn btn-primary disabled" type="submit">Next</button>
+            </div>
+
+        </form>
+
+        {% if error_message %}
+            <div class="alert alert-warning">
+                <strong>Warning!</strong> {{ error_message }}
+            </div>
+        {% endif %}
+
+
+        <div class="d-flex flex-row mt-3 justify-content-between sc-banner-intext-placeholder">
+
+            <div>
+                <h4>Important Information</h4>
+
+                <div class="sc-banner sc-banner-intext mb-3 ml-3 float-right">
+                    {% include 'ads/banner_intext.html' %}
+                </div>
+
+                {% include 'survey/survey/rules.html' %}
+            </div>
+
+        </div>
+
+    {% elif all_answered %}
+
+        <div class="d-flex justify-content-center flex-column">
+            {% if has_contradicting %}
+                <div class="sc-card-success card border-warning mb-3 mx-auto">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">I’m sorry, but your survey is invalid.</h4>
+                        <p class="card-text text-center">Because too many of yours answers are contradicting.<br/> On your next survey, be more careful.</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="sc-card-success card border-success mb-3 mx-auto">
+                    <div class="card-body">
+                        <h4 class="card-title text-center">Thank you for completing the survey.</h4>
+                        <p class="card-text text-center">It was found valid. Click on the next button to continue with another survey.</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="btn-group">
+                <div class="mx-auto">
+                    <a href="{% url 'survey:index' %}"
+                       class="btn btn-primary">
+                        START NEXT SURVEY
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            let timerEl = $('#timer');
+            let timerTextEl = $('#timer-text');
+            let navigationEl = $('.sc-survey-navigation');
+
+            let timer = parseInt(timerTextEl.text());
+            let interval = setInterval(() => {
+                if (timer <= 0) {
+                    timerEl.css({visibility: 'hidden'});
+                    navigationEl.addClass('btn-success');
+                    navigationEl.removeClass('btn-primary');
+                    return clearInterval(interval)
+                }
+                timer = timer - 1;
+                timerTextEl.text(timer)
+            }, 1000);
+
+            $('#survey-form .sc-survey-navigation').on('click', e => {
+                if (timer > 0) {
+                    e.preventDefault();
+                    return SV.showMessage('You have to wait till the timer ends.')
+                }
+                if ($('form').serialize().split('&').length <= 1) {
+                    e.preventDefault();
+                    return SV.showMessage('You have to choose one ore more answers to continue.');
+                }
+            })
+
+
+        })
+
+    </script>
+
+{% endblock %}
